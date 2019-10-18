@@ -14,6 +14,9 @@ import ARKit
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate,ARSCNViewDelegate,ARSessionDelegate {
     
+    //计时器
+    var startTimes: [CFTimeInterval] = []
+    
     // 显示识别结果的Bounding的图层
     var detectionOverlay: CALayer! = nil
     var rootLayer: CALayer! = nil
@@ -73,7 +76,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // 设置YOLO识别器
         // Vision classification request and model
         
-        guard let ARmodelURL = Bundle.main.url(forResource: "YOLOv3", withExtension: "mlmodelc") else {fatalError("没有找到YOLOv3模型，凉凉")
+        guard let ARmodelURL = Bundle.main.url(forResource: "YOLOv3Tiny", withExtension: "mlmodelc") else {fatalError("没有找到YOLOv3模型，凉凉")
         }
         do {
             // 载入模型
@@ -173,6 +176,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let node : SCNNode = createNewBubbleParentNode(latestPrediction)
             sceneView.scene.rootNode.addChildNode(node)
             node.position = worldCoord
+            print(worldCoord)
         }
     }
     
@@ -294,6 +298,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         pixbuff  = sceneView.session.currentFrame?.capturedImage
         if pixbuff == nil { return }
         
+        // 计时器
+        startTimes.append(CACurrentMediaTime())
+        
         // Prepare CoreML/Vision Request，VNImageRequestHandler是处理与单个图像有关的一个或多个图像分析请求的对象
         // Vision will automatically resize the input image.
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixbuff!, options: [:])
@@ -320,9 +327,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             print("Unable to classify image.\n\(error!.localizedDescription)")
             return
         }
+        
+        // 输出模型延迟
+        let elapsed = CACurrentMediaTime() - startTimes.remove(at: 0)
+        print(String(format: "Elapsed %.5f seconds", elapsed))
     
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+        //CATransaction.begin()
+        //CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         detectionOverlay.sublayers = nil // remove all the old recognized objects
         
         // Get ObjectRecognition
@@ -353,11 +364,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 
                 //显示Layer
                 let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds, identifier: topLabelObservation.identifier)
-                let textLayer = self.createTextSubLayerInBounds(objectBounds,
-                                                                identifier: topLabelObservation.identifier,
-                                                                confidence: topLabelObservation.confidence)
-                shapeLayer.addSublayer(textLayer)
+                let textLayer = self.createTextSubLayerInBounds(objectBounds, identifier: topLabelObservation.identifier, confidence: topLabelObservation.confidence)
                 
+                CATransaction.setDisableActions(true)
+                shapeLayer.addSublayer(textLayer)
+                self.detectionOverlay.addSublayer(shapeLayer)
                 
 //                for layer in self.detectionOverlay.sublayers!{
 //                    if shapeLayer.name == layer.name{
@@ -366,10 +377,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 //                    }
 //                }
                 
-                self.detectionOverlay.addSublayer(shapeLayer)
             }
-            self.updateLayerGeometry()
-            CATransaction.commit()
+            // self.updateLayerGeometry()
+            // CATransaction.commit()
         }
     }
     
