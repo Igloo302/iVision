@@ -18,10 +18,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var detectionOverlay: CALayer! = nil
     var rootLayer: CALayer! = nil
     
+    // 屏幕尺寸
     var bufferSize: CGSize = .zero
-    
-
-    
     
     // COREML
     var visionRequests = [VNRequest]()
@@ -82,14 +80,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let visionModel = try VNCoreMLModel(for: MLModel(contentsOf: ARmodelURL))
             print("😎SceneKit所需模型载入成功")
             // 使用该模型创建一个VNCoreMLRequest，识别到之后执行completionHandler里面的部分
-            let ARobjectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: ARobjectRecognitionCompleteHandler)
+            let ARobjectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: objectRecognitionCompleteHandler)
             
             // Crop input images to square area at center, matching the way the ML model was trained.
-            // ARobjectRecognition.imageCropAndScaleOption = .scaleFill
+            
+            // NOTE: If you choose another crop/scale option, then you must also
+            // change how the BoundingBox objects get scaled when they are drawn.
+            // Currently they assume the full input image is used.
+            ARobjectRecognition.imageCropAndScaleOption = .scaleFill
             
             // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.
             // ARobjectRecognition.usesCPUOnly = true
-            
             
             visionRequests = [ARobjectRecognition]
         } catch let error as NSError {
@@ -294,6 +295,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         if pixbuff == nil { return }
         
         // Prepare CoreML/Vision Request，VNImageRequestHandler是处理与单个图像有关的一个或多个图像分析请求的对象
+        // Vision will automatically resize the input image.
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixbuff!, options: [:])
 
         // Run Image Request
@@ -312,7 +314,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     // 识别器完成之后干的事情
     // Handle completion of the Vision request and choose results to display.
-    func ARobjectRecognitionCompleteHandler(request: VNRequest, error: Error?){
+    func objectRecognitionCompleteHandler(request: VNRequest, error: Error?){
         // Catch Errors
         guard let observations = request.results else {
             print("Unable to classify image.\n\(error!.localizedDescription)")
@@ -333,7 +335,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // 该示例应用程序仅在元素0处记录了具有最高置信度得分的分类。
             // 然后，它会在文本叠加层中显示此分类和置信度。
             let topLabelObservation = objectObservation.labels[0]
-            let ARobjectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
+            let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
             
             DispatchQueue.main.async {
                 var debugText:String = ""
@@ -344,14 +346,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
                 // 保存识别的结果
                 self.latestPrediction = topLabelObservation.identifier
-                self.latestPredictionPosition = CGPoint(x:ARobjectBounds.midY, y: ARobjectBounds.midX)
+                self.latestPredictionPosition = CGPoint(x:objectBounds.midY, y: objectBounds.midX)
                 
                 // 显示Cube
                 // self.showNode()
                 
                 //显示Layer
-                let shapeLayer = self.createRoundedRectLayerWithBounds(ARobjectBounds, identifier: topLabelObservation.identifier)
-                let textLayer = self.createTextSubLayerInBounds(ARobjectBounds,
+                let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds, identifier: topLabelObservation.identifier)
+                let textLayer = self.createTextSubLayerInBounds(objectBounds,
                                                                 identifier: topLabelObservation.identifier,
                                                                 confidence: topLabelObservation.confidence)
                 shapeLayer.addSublayer(textLayer)
@@ -370,6 +372,42 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             CATransaction.commit()
         }
     }
+    
+//        // 分类器识别出结果的时候会这样做：
+//        func classificationCompleteHandler(request: VNRequest, error: Error?) {
+//            // Catch Errors
+//            if error != nil {
+//                print("Error: " + (error?.localizedDescription)!)
+//                return
+//            }
+//            guard let observations = request.results else {
+//                print("No results")
+//                return
+//            }
+//
+//            // Get Classifications 分类的内容弄出来
+//            let classifications = observations[0...1] // top 2 results
+//                .compactMap({ $0 as? VNClassificationObservation })
+//                .map({ "\($0.identifier) \(String(format:"- %.2f", $0.confidence))" })
+//                .joined(separator: "\n")
+//
+//
+//            DispatchQueue.main.async {
+//                // Display Debug Text on screen
+//                // 把识别结果先都显示在Debug里
+//                var debugText:String = ""
+//                debugText += classifications
+//                self.debugTextView.text = debugText
+//
+//                // Store the latest prediction
+//                // 存储最新的识别结果
+//                var objectName:String = "…"
+//                objectName = classifications.components(separatedBy: "-")[0]
+//                objectName = objectName.components(separatedBy: ",")[0]
+//                self.latestPrediction = objectName
+//
+//            }
+//        }
     
     func setupLayers() {
         // container layer that has all the renderings of the observations
@@ -434,49 +472,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         shapeLayer.cornerRadius = 7
         return shapeLayer
     }
-    
-//    // 分类器识别出结果的时候会这样做：
-//    func classificationCompleteHandler(request: VNRequest, error: Error?) {
-//        // Catch Errors
-//        if error != nil {
-//            print("Error: " + (error?.localizedDescription)!)
-//            return
-//        }
-//        guard let observations = request.results else {
-//            print("No results")
-//            return
-//        }
-//
-//        // Get Classifications 分类的内容弄出来
-//        let classifications = observations[0...1] // top 2 results
-//            .compactMap({ $0 as? VNClassificationObservation })
-//            .map({ "\($0.identifier) \(String(format:"- %.2f", $0.confidence))" })
-//            .joined(separator: "\n")
-//
-//
-//        DispatchQueue.main.async {
-//            // Print Classifications 不用打印出来
-//            // print(classifications)
-//            // print("--")
-//
-//            // Display Debug Text on screen
-//            // 把识别结果先都显示在Debug里
-//            var debugText:String = ""
-//            debugText += classifications
-//            self.debugTextView.text = debugText
-//
-//            // Store the latest prediction
-//            // 存储最新的识别结果
-////            var objectName:String = "…"
-////            objectName = classifications.components(separatedBy: "-")[0]
-////            objectName = objectName.components(separatedBy: ",")[0]
-////            self.latestPrediction = objectName
-//
-//        }
-//    }
-    
-
-    
 
 }
 
