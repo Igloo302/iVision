@@ -8,13 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0300B8AF234B41190061C02E /* VNCoreMLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB417F52099308400494E9C /* VNCoreMLRequest.swift */; };
-		032557F12349B902004A44C7 /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557EF2349B902004A44C7 /* YOLOv3.mlmodel */; };
 		033DB90A2359D5150062B8B4 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
-		033DB90C2359E64C0062B8B4 /* YOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033DB90B2359E64C0062B8B4 /* YOLO.swift */; };
-		033DB90E2359E71A0062B8B4 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033DB90D2359E7190062B8B4 /* Helpers.swift */; };
-		033DB9102359E74D0062B8B4 /* CVPixelBuffer+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033DB90F2359E74D0062B8B4 /* CVPixelBuffer+Helpers.swift */; };
-		033DB9122359E7710062B8B4 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033DB9112359E7710062B8B4 /* UIImage+CVPixelBuffer.swift */; };
-		033DB9142359E79F0062B8B4 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033DB9132359E79F0062B8B4 /* BoundingBox.swift */; };
 		FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */; };
 		FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD5009E1ED668B60074D713 /* AppDelegate.swift */; };
 		FAD500A11ED668B60074D713 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD500A01ED668B60074D713 /* ViewController.swift */; };
@@ -188,14 +182,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				033DB90A2359D5150062B8B4 /* YOLOv3Tiny.mlmodel in Sources */,
-				033DB9102359E74D0062B8B4 /* CVPixelBuffer+Helpers.swift in Sources */,
-				033DB90E2359E71A0062B8B4 /* Helpers.swift in Sources */,
 				0300B8AF234B41190061C02E /* VNCoreMLRequest.swift in Sources */,
-				033DB90C2359E64C0062B8B4 /* YOLO.swift in Sources */,
-				033DB9142359E79F0062B8B4 /* BoundingBox.swift in Sources */,
-				032557F12349B902004A44C7 /* YOLOv3.mlmodel in Sources */,
 				FAD500A11ED668B60074D713 /* ViewController.swift in Sources */,
-				033DB9122359E7710062B8B4 /* UIImage+CVPixelBuffer.swift in Sources */,
 				FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

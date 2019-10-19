@@ -1,9 +1,9 @@
 /*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-Contains the view controller for the Breakfast Finder.
-*/
+ See LICENSE folder for this sample’s licensing information.
+ 
+ Abstract:
+ Contains the view controller for the Breakfast Finder.
+ */
 
 import UIKit
 import AVFoundation
@@ -13,6 +13,30 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate,ARSCNViewDelegate,ARSessionDelegate {
+    
+    let showLayer = false
+    
+    public static let inputWidth = 416
+    public static let inputHeight = 416
+    public static let maxBoundingBoxes = 10
+    
+    // Tweak these values to get more or fewer predictions.
+    let confidenceThreshold: Float = 0.3
+    let iouThreshold: Float = 0.5
+    
+    // 识别的物体
+    struct Prediction {
+        let classIndex: Int
+        let score: Float
+        let rect: CGRect
+        let worldCoord: [SCNVector3]
+    }
+    
+    var predictions = [Prediction]()
+    var nodes = [SCNNode]()
+    
+    // 识别到的物体的名字
+    var labels = [String]()
     
     //计时器
     var startTimes: [CFTimeInterval] = []
@@ -50,6 +74,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
         
+        sceneView.preferredFramesPerSecond = 30
+        
         // Create a new scene
         let scene = SCNScene()
         
@@ -59,7 +85,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Enable Default Lighting - makes the 3D text a bit poppier.
         sceneView.autoenablesDefaultLighting = true
         
-        sceneView.debugOptions = [.showFeaturePoints]
+        // sceneView.debugOptions = [.showFeaturePoints]
         
         bufferSize = CGSize(width: sceneView.bounds.height, height: sceneView.bounds.width)
         print("😎把BufferSize设置成", bufferSize)
@@ -111,7 +137,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // Enable plane detection
         // configuration.planeDetection = [.horizontal, .vertical]
-
+        
         // Run the view's session
         sceneView.session.run(configuration)
         print("😎AR Configuration载入成功")
@@ -141,12 +167,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         updateCoreML()
     }
     
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        
-    }
-    
-    
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -159,8 +179,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     // MARK: - Interaction
-
-
+    
+    
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
         
         // 真正的位置！
@@ -171,49 +191,35 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // Get Coordinates of HitTest
             let transform : matrix_float4x4 = closestResult.worldTransform
             let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-
+            
             // Create 3D Text
             let node : SCNNode = createNewBubbleParentNode(latestPrediction)
             sceneView.scene.rootNode.addChildNode(node)
             node.position = worldCoord
+            node.name = latestPrediction
             print(worldCoord)
         }
     }
     
-
-    func showNode() {
-            // 真正的位置！
-            // print("🌚latestPredictionPosition", latestPredictionPosition)
-            let HitTestResults : [ARHitTestResult] = sceneView.hitTest(latestPredictionPosition, types: [.featurePoint])
-            
-            if let closestResult = HitTestResults.first {
-                // Get Coordinates of HitTest
-                let transform : matrix_float4x4 = closestResult.worldTransform
-                let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-
-                // Create 3D Text
-                let node : SCNNode = createNewBubbleParentNode(latestPrediction)
-                sceneView.scene.rootNode.addChildNode(node)
-                node.position = worldCoord
-            }
-        }
     
-    func AddObjectNode() {
-        
+    func showNode() {
         // 真正的位置！
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(latestPredictionPosition, types: [.featurePoint])
+        // print("🌚latestPredictionPosition", latestPredictionPosition)
+        let HitTestResults : [ARHitTestResult] = sceneView.hitTest(latestPredictionPosition, types: [.featurePoint])
         
-        if let closestResult = arHitTestResults.first {
+        if let closestResult = HitTestResults.first {
             // Get Coordinates of HitTest
             let transform : matrix_float4x4 = closestResult.worldTransform
             let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-
+            
             // Create 3D Text
             let node : SCNNode = createNewBubbleParentNode(latestPrediction)
             sceneView.scene.rootNode.addChildNode(node)
             node.position = worldCoord
         }
     }
+    
+    
     
     func createNewBubbleParentNode(_ text : String) -> SCNNode {
         // Warning: Creating 3D Text is susceptible to crashing. To reduce chances of crashing; reduce number of polygons, letters, smoothness, etc.
@@ -223,22 +229,22 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         bubbleNodeParent.constraints = [createBillboardConstraint()]
         return bubbleNodeParent
     }
-
+    
     private func createBubbleNode(bubble: String) -> SCNNode {
         let bubble = createBubble(text: bubble)
-//        // 让Siri说说话
-//        var stringToSpeak = String("")
-//        for _ in 0..<100 {
-//            stringToSpeak += (bubble + "is here.")
-//        }
-//
-//        let utterance = AVSpeechUtterance(string: stringToSpeak)
-//        let synthesizer = AVSpeechSynthesizer()
-//        synthesizer.speak(utterance)
-//
-//        let avMaterial = SCNMaterial()
-//        avMaterial.diffuse.contents = synthesizer
-//        bubble.materials = [avMaterial]
+        //        // 让Siri说说话
+        //        var stringToSpeak = String("")
+        //        for _ in 0..<100 {
+        //            stringToSpeak += (bubble + "is here.")
+        //        }
+        //
+        //        let utterance = AVSpeechUtterance(string: stringToSpeak)
+        //        let synthesizer = AVSpeechSynthesizer()
+        //        synthesizer.speak(utterance)
+        //
+        //        let avMaterial = SCNMaterial()
+        //        avMaterial.diffuse.contents = synthesizer
+        //        bubble.materials = [avMaterial]
         let (minBound, maxBound) = bubble.boundingBox
         let bubbleNode = SCNNode(geometry: bubble)
         // Centre Node - to Centre-Bottom point
@@ -246,19 +252,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Reduce default text size
         bubbleNode.scale = SCNVector3Make(0.2, 0.2, 0.2)
         
-//        //播放音乐
-//        let audioSource = SCNAudioSource(fileNamed: "Dog.mp3")!
-//        // As an environmental sound layer, audio should play indefinitely
-//        audioSource.loops = true
-//        // Decode the audio from disk ahead of time to prevent a delay in playback
-//        audioSource.load()
-//
-//        // Create a player from the source and add it to `objectNode`
-//        bubbleNode.addAudioPlayer(SCNAudioPlayer(source: audioSource))
+        //        //播放音乐
+        //        let audioSource = SCNAudioSource(fileNamed: "Dog.mp3")!
+        //        // As an environmental sound layer, audio should play indefinitely
+        //        audioSource.loops = true
+        //        // Decode the audio from disk ahead of time to prevent a delay in playback
+        //        audioSource.load()
+        //
+        //        // Create a player from the source and add it to `objectNode`
+        //        bubbleNode.addAudioPlayer(SCNAudioPlayer(source: audioSource))
         
         return bubbleNode
     }
-
+    
     private func createBubble(text: String) -> SCNText {
         let bubble = SCNText(string: text, extrusionDepth: CGFloat(bubbleDepth))
         var font = UIFont(name: "Futura", size: 0.15)
@@ -272,13 +278,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         bubble.chamferRadius = CGFloat(bubbleDepth)
         return bubble
     }
-
+    
     private func createSphereNode() -> SCNNode {
         let sphere = SCNSphere(radius: 0.005)
         sphere.firstMaterial?.diffuse.contents = UIColor.cyan
         return SCNNode(geometry: sphere)
     }
-
+    
     private func createBillboardConstraint() -> SCNBillboardConstraint {
         let billboardConstraint = SCNBillboardConstraint()
         billboardConstraint.freeAxes = SCNBillboardAxis.Y
@@ -304,7 +310,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Prepare CoreML/Vision Request，VNImageRequestHandler是处理与单个图像有关的一个或多个图像分析请求的对象
         // Vision will automatically resize the input image.
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixbuff!, options: [:])
-
+        
         // Run Image Request
         visionQueue.async {
             do {
@@ -331,10 +337,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // 输出模型延迟
         let elapsed = CACurrentMediaTime() - startTimes.remove(at: 0)
         print(String(format: "Elapsed %.5f seconds", elapsed))
+        
+        showOnMainThread(observations, elapsed)
+    }
     
-        //CATransaction.begin()
-        //CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        detectionOverlay.sublayers = nil // remove all the old recognized objects
+    // MARK: - Something New
+    
+    func showOnMainThread(_ observations: [Any],_ elapsed: CFTimeInterval){
+        //删除之前的sublayers
+        detectionOverlay.sublayers = nil
         
         // Get ObjectRecognition
         for observation in observations where observation is VNRecognizedObjectObservation{
@@ -346,78 +357,108 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // 该示例应用程序仅在元素0处记录了具有最高置信度得分的分类。
             // 然后，它会在文本叠加层中显示此分类和置信度。
             let topLabelObservation = objectObservation.labels[0]
-            let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
-            
-            DispatchQueue.main.async {
-                var debugText:String = ""
-                debugText += "\(topLabelObservation.identifier)" + "\(topLabelObservation.confidence)"
-                self.debugTextView.text = debugText
-                // print("😎", topLabelObservation.identifier)
+            // 取置信度高的
+            if topLabelObservation.confidence > confidenceThreshold {
                 
-
+                let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
+                
+                addToPredictions(objectBounds, identifier: topLabelObservation.identifier, confidence: topLabelObservation.confidence)
+                
+                // updateNode
+                updateNode(predictions.last!)
+                
                 // 保存识别的结果
                 self.latestPrediction = topLabelObservation.identifier
                 self.latestPredictionPosition = CGPoint(x:objectBounds.midY, y: objectBounds.midX)
                 
-                // 显示Cube
-                // self.showNode()
-                
-                //显示Layer
-                let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds, identifier: topLabelObservation.identifier)
-                let textLayer = self.createTextSubLayerInBounds(objectBounds, identifier: topLabelObservation.identifier, confidence: topLabelObservation.confidence)
-                
-                CATransaction.setDisableActions(true)
-                shapeLayer.addSublayer(textLayer)
-                self.detectionOverlay.addSublayer(shapeLayer)
-                
-//                for layer in self.detectionOverlay.sublayers!{
-//                    if shapeLayer.name == layer.name{
-//                        layer.removeFromSuperlayer()
-//
-//                    }
-//                }
+                DispatchQueue.main.async {
+                    self.updateUI(topLabelObservation)
+                    
+                    if self.showLayer {
+                        self.updateLayer(topLabelObservation, objectBounds)
+                    }
+                }
                 
             }
-            // self.updateLayerGeometry()
-            // CATransaction.commit()
+        }
+        
+        
+    }
+    
+    func updateNode(_ prediction: Prediction){
+//        print(prediction.classIndex)
+//        print(labels.count)
+//        print(labels[prediction.classIndex])
+        
+        var nodeExsit = false
+        for node in nodes {
+            if node.name == labels[prediction.classIndex]{
+                // print("Change Position")
+                node.position = prediction.worldCoord.first!
+                nodeExsit = true
+                continue
+            }
+        }
+        if !nodeExsit{
+            // print("Add New Node")
+            let node = createNewBubbleParentNode(labels[prediction.classIndex])
+            node.position = prediction.worldCoord.first!
+            node.name = labels[prediction.classIndex]
+            nodes.append(node)
+            sceneView.scene.rootNode.addChildNode(node)
         }
     }
     
-//        // 分类器识别出结果的时候会这样做：
-//        func classificationCompleteHandler(request: VNRequest, error: Error?) {
-//            // Catch Errors
-//            if error != nil {
-//                print("Error: " + (error?.localizedDescription)!)
-//                return
-//            }
-//            guard let observations = request.results else {
-//                print("No results")
-//                return
-//            }
-//
-//            // Get Classifications 分类的内容弄出来
-//            let classifications = observations[0...1] // top 2 results
-//                .compactMap({ $0 as? VNClassificationObservation })
-//                .map({ "\($0.identifier) \(String(format:"- %.2f", $0.confidence))" })
-//                .joined(separator: "\n")
-//
-//
-//            DispatchQueue.main.async {
-//                // Display Debug Text on screen
-//                // 把识别结果先都显示在Debug里
-//                var debugText:String = ""
-//                debugText += classifications
-//                self.debugTextView.text = debugText
-//
-//                // Store the latest prediction
-//                // 存储最新的识别结果
-//                var objectName:String = "…"
-//                objectName = classifications.components(separatedBy: "-")[0]
-//                objectName = objectName.components(separatedBy: ",")[0]
-//                self.latestPrediction = objectName
-//
-//            }
-//        }
+    func updateUI(_ topLabelObservation: VNClassificationObservation){
+        var debugText:String = ""
+        debugText += "\(topLabelObservation.identifier)" + "\(topLabelObservation.confidence)"
+        self.debugTextView.text = debugText
+    }
+    //显示Layer
+    func updateLayer(_ topLabelObservation: VNClassificationObservation, _ objectBounds: CGRect){
+        
+        
+        let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds, identifier: topLabelObservation.identifier)
+        let textLayer = self.createTextSubLayerInBounds(objectBounds, identifier: topLabelObservation.identifier, confidence: topLabelObservation.confidence)
+        // CATransaction.setDisableActions(true)
+        shapeLayer.addSublayer(textLayer)
+        self.detectionOverlay.addSublayer(shapeLayer)
+        
+    }
+    
+    
+    func addToPredictions(_ rect: CGRect, identifier: String, confidence: VNConfidence){
+        
+        let worldCoord = [getWorldCoord(rect)]
+        
+        let prediction = Prediction(classIndex: getClassIndex(identifier: identifier), score: confidence * 100, rect: rect, worldCoord: worldCoord)
+        
+        // print(prediction)
+        
+        predictions.append(prediction)
+    }
+    
+    func getClassIndex(identifier: String) -> Int{
+        if let indexOf = labels.firstIndex(of: identifier) {
+            return indexOf
+        }else{
+            labels.append(identifier)
+            return labels.firstIndex(of: identifier)!
+        }
+    }
+    
+    func getWorldCoord(_ rect: CGRect) -> SCNVector3{
+        
+        let screenPoint = CGPoint(x:rect.midY, y: rect.midX)
+        let HitTestResults : [ARHitTestResult] = sceneView.hitTest(screenPoint, types: [.featurePoint])
+        
+        if let closestResult = HitTestResults.first {
+            // Get Coordinates of HitTest
+            let transform : matrix_float4x4 = closestResult.worldTransform
+            let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+            return worldCoord
+        }else{return SCNVector3(0, 0, 0)}
+    }
     
     func setupLayers() {
         // container layer that has all the renderings of the observations
@@ -435,26 +476,26 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     func updateLayerGeometry() {
         let bounds = rootLayer.bounds
         var scale: CGFloat
-
+        
         let xScale: CGFloat = bounds.size.width / bufferSize.height
         let yScale: CGFloat = bounds.size.height / bufferSize.width
-
+        
         scale = fmax(xScale, yScale)
         if scale.isInfinite {
             scale = 1.0
         }
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-
+        //        CATransaction.begin()
+        //        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+        
         // rotate the layer into screen orientation and scale and mirror
         detectionOverlay.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: scale, y: -scale))
         // center the layer
         detectionOverlay.position = CGPoint (x: bounds.midX, y: bounds.midY)
-
-        CATransaction.commit()
-
+        
+        //        CATransaction.commit()
+        
     }
-
+    
     func createTextSubLayerInBounds(_ bounds: CGRect, identifier: String, confidence: VNConfidence) -> CATextLayer {
         let textLayer = CATextLayer()
         textLayer.name = "Object Label"
@@ -472,7 +513,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         textLayer.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: 1.0, y: -1.0))
         return textLayer
     }
-
+    
     func createRoundedRectLayerWithBounds(_ bounds: CGRect, identifier: String) -> CALayer {
         let shapeLayer = CALayer()
         shapeLayer.bounds = bounds
@@ -482,7 +523,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         shapeLayer.cornerRadius = 7
         return shapeLayer
     }
-
+    
 }
 
 extension UIFont {
