@@ -26,7 +26,7 @@ class YOLO {
   }
 
 // 这样载入模型貌似更加方便一点
-  let model = YOLOv3Tiny()
+  let model = TinyYOLO()
 
   public init() { }
 
