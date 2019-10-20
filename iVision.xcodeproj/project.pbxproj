@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0300B8AF234B41190061C02E /* VNCoreMLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB417F52099308400494E9C /* VNCoreMLRequest.swift */; };
 		033DB90A2359D5150062B8B4 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
+		039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */; };
+		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
 		FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */; };
 		FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD5009E1ED668B60074D713 /* AppDelegate.swift */; };
 		FAD500A11ED668B60074D713 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD500A01ED668B60074D713 /* ViewController.swift */; };
@@ -25,6 +27,8 @@
 		033DB90F2359E74D0062B8B4 /* CVPixelBuffer+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Helpers.swift"; sourceTree = "<group>"; };
 		033DB9112359E7710062B8B4 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		033DB9132359E79F0062B8B4 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
+		039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = keyboard.mp3; sourceTree = "<group>"; };
+		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
 		B9491870B9491B3000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		B972A080B9729F9000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		C2A2AB60C2A2AB2000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -50,6 +54,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		039DC1B6235C497300C5E7E7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */,
+				039DC1B4235C494500C5E7E7 /* fireplace.mp3 */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		B94912A0B949159000000001 /* LICENSE */ = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +101,7 @@
 		FAD5009D1ED668B60074D713 /* iVision */ = {
 			isa = PBXGroup;
 			children = (
+				039DC1B6235C497300C5E7E7 /* Resources */,
 				FAD5009E1ED668B60074D713 /* AppDelegate.swift */,
 				FAD500A01ED668B60074D713 /* ViewController.swift */,
 				FAB417F52099308400494E9C /* VNCoreMLRequest.swift */,
@@ -169,7 +183,9 @@
 			files = (
 				FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */,
 				FAD500A91ED668B60074D713 /* LaunchScreen.storyboard in Resources */,
+				039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */,
 				FAD500A61ED668B60074D713 /* Assets.xcassets in Resources */,
+				039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */,
 				FAD500A41ED668B60074D713 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

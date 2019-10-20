@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,22 +22,30 @@
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UQG-yk-ma9">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </arscnView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0g-yA-FJe">
-                                <rect key="frame" x="137.5" y="487.5" width="100" height="99.5"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0g-yA-FJe">
+                                <rect key="frame" x="137.5" y="487" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="F0T-6j-KhK"/>
                                     <constraint firstAttribute="height" constant="100" id="sUH-CE-8dI"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="magnifyingglass.circle.fill" catalog="system"/>
+                                <state key="normal" image="find"/>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="iVision是专为视力缺陷人群设计的辅助类APP" textAlignment="justified" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9QS-wv-p1j">
-                                <rect key="frame" x="28" y="10" width="319" height="80"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="49I-uR-yJw">
+                                <rect key="frame" x="36" y="20" width="50" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="Jx0-Wd-riL"/>
+                                    <constraint firstAttribute="width" constant="50" id="Adc-6E-d1S"/>
                                 </constraints>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <state key="normal" title="Button" image="object"/>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.90000000000000002" contentMode="scaleToFill" editable="NO" text="iVision是专为视力缺陷人群设计的辅助类APP" textAlignment="right" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9QS-wv-p1j">
+                                <rect key="frame" x="139" y="20" width="200" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="sJ5-iC-pii"/>
+                                    <constraint firstAttribute="height" constant="50" id="uIA-zk-0vd"/>
+                                </constraints>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
@@ -49,9 +57,11 @@
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="JRf-ya-Geq"/>
                             <constraint firstAttribute="bottom" secondItem="UQG-yk-ma9" secondAttribute="bottom" id="Oty-V3-qJj"/>
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="QD8-4n-bQQ"/>
-                            <constraint firstItem="9QS-wv-p1j" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="Tpq-gM-Trn"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="9QS-wv-p1j" secondAttribute="trailing" constant="12" id="dpm-1h-akK"/>
-                            <constraint firstItem="9QS-wv-p1j" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="12" id="oHU-qB-St7"/>
+                            <constraint firstItem="49I-uR-yJw" firstAttribute="bottom" secondItem="9QS-wv-p1j" secondAttribute="bottom" id="f6N-yl-X3c"/>
+                            <constraint firstItem="49I-uR-yJw" firstAttribute="top" secondItem="9QS-wv-p1j" secondAttribute="top" id="osw-my-KK0"/>
+                            <constraint firstItem="49I-uR-yJw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="v5O-5V-zME"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="9QS-wv-p1j" secondAttribute="trailing" constant="20" id="wqv-41-WS2"/>
+                            <constraint firstItem="9QS-wv-p1j" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="zA4-ub-Uew"/>
                         </constraints>
                     </view>
                     <connections>
@@ -61,10 +71,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="135.19999999999999" y="132.68365817091455"/>
+            <point key="canvasLocation" x="131.8840579710145" y="131.25"/>
         </scene>
     </scenes>
     <resources>
-        <image name="magnifyingglass.circle.fill" catalog="system" width="64" height="62"/>
+        <image name="find" width="202" height="202"/>
+        <image name="object" width="173" height="174"/>
     </resources>
 </document>
