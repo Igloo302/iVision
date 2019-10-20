@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0B235CAFF50089C4EA /* btn_recordStop.wav */; };
+		03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0C235CAFF50089C4EA /* btn_recordStart.wav */; };
 		033DB90A2359D5150062B8B4 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
 		039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */; };
 		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
@@ -19,13 +21,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		03089F0B235CAFF50089C4EA /* btn_recordStop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStop.wav; sourceTree = "<group>"; };
+		03089F0C235CAFF50089C4EA /* btn_recordStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStart.wav; sourceTree = "<group>"; };
 		032557EF2349B902004A44C7 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
 		032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3Tiny.mlmodel; sourceTree = "<group>"; };
-		033DB90B2359E64C0062B8B4 /* YOLO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YOLO.swift; sourceTree = "<group>"; };
-		033DB90D2359E7190062B8B4 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
-		033DB90F2359E74D0062B8B4 /* CVPixelBuffer+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Helpers.swift"; sourceTree = "<group>"; };
-		033DB9112359E7710062B8B4 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
-		033DB9132359E79F0062B8B4 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = keyboard.mp3; sourceTree = "<group>"; };
 		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
 		B9491870B9491B3000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -55,6 +54,8 @@
 		039DC1B6235C497300C5E7E7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				03089F0C235CAFF50089C4EA /* btn_recordStart.wav */,
+				03089F0B235CAFF50089C4EA /* btn_recordStop.wav */,
 				039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */,
 				039DC1B4235C494500C5E7E7 /* fireplace.mp3 */,
 			);
@@ -102,11 +103,6 @@
 				039DC1B6235C497300C5E7E7 /* Resources */,
 				FAD5009E1ED668B60074D713 /* AppDelegate.swift */,
 				FAD500A01ED668B60074D713 /* ViewController.swift */,
-				033DB90B2359E64C0062B8B4 /* YOLO.swift */,
-				033DB90F2359E74D0062B8B4 /* CVPixelBuffer+Helpers.swift */,
-				033DB9112359E7710062B8B4 /* UIImage+CVPixelBuffer.swift */,
-				033DB9132359E79F0062B8B4 /* BoundingBox.swift */,
-				033DB90D2359E7190062B8B4 /* Helpers.swift */,
 				FAD500A21ED668B60074D713 /* Main.storyboard */,
 				FAD500A51ED668B60074D713 /* Assets.xcassets */,
 				FAD500A71ED668B60074D713 /* LaunchScreen.storyboard */,
@@ -180,10 +176,12 @@
 			files = (
 				FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */,
 				FAD500A91ED668B60074D713 /* LaunchScreen.storyboard in Resources */,
+				03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */,
 				039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */,
 				FAD500A61ED668B60074D713 /* Assets.xcassets in Resources */,
 				039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */,
 				FAD500A41ED668B60074D713 /* Main.storyboard in Resources */,
+				03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

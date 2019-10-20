@@ -29,6 +29,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     private let audioEngine = AVAudioEngine()
     
+//    let recordStartSound = URL(fileURLWithPath: Bundle.main.path(forResource: "btn_recordStart", ofType: "wav")!)
+//    var audioPlayer = AVAudioPlayer()
+
     @IBOutlet var recordButton: UIButton!
     
     @IBOutlet var textView: UITextView!
@@ -58,6 +61,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     // 识别到的物体的名字
     var labels = [String]()
+    let labelsInChinese = [String]()
     
     //计时器
     var startTimes: [CFTimeInterval] = []
@@ -86,8 +90,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        recordButton.imageView?.contentMode = .scaleAspectFit
+        
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
+        recordButton.setImage(UIImage(named: "find"), for: .disabled)
         
         // Set the view's delegate
         sceneView.delegate = self
@@ -184,18 +191,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                     
                 case .denied:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("User denied access to speech recognition", for: .disabled)
+                    //self.recordButton.setTitle("User denied access to speech recognition", for: .disabled)
+                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 case .restricted:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("Speech recognition restricted on this device", for: .disabled)
+                    //self.recordButton.setTitle("Speech recognition restricted on this device", for: .disabled)
+                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 case .notDetermined:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("Speech recognition not yet authorized", for: .disabled)
+                    //self.recordButton.setTitle("Speech recognition not yet authorized", for: .disabled)
+                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 default:
                     self.recordButton.isEnabled = false
+                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 }
             }
@@ -209,6 +220,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         // Pause the view's session
         sceneView.session.pause()
     }
+    
+    // MARK: SFSpeechRecognizer
     
     private func startRecording() throws {
         
@@ -253,7 +266,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 self.recognitionTask = nil
 
                 self.recordButton.isEnabled = true
-                self.recordButton.setTitle("Start Recording", for: [])
+                //self.recordButton.setTitle("Start Recording", for: [])
+                self.recordButton.setImage(UIImage(named: "find"), for: .normal)
             }
         }
 
@@ -270,15 +284,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         textView.text = "(Go ahead, I'm listening)"
     }
     
-    // MARK: SFSpeechRecognizerDelegate
-    
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             recordButton.isEnabled = true
-            recordButton.setTitle("Start Recording", for: [])
+            //recordButton.setTitle("Start Recording", for: [])
+            recordButton.setImage(UIImage(named: "find"), for: .normal)
         } else {
             recordButton.isEnabled = false
-            recordButton.setTitle("Recognition Not Available", for: .disabled)
+            //recordButton.setTitle("Recognition Not Available", for: .disabled)
+            recordButton.setImage(UIImage(named: "find"), for: .disabled)
         }
     }
     
@@ -289,14 +303,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
-            recordButton.setTitle("Stopping", for: .disabled)
+            //recordButton.setTitle("Stopping", for: .disabled)
+            recordButton.setImage(UIImage(named: "find"), for: .disabled)
         } else {
             do {
-                //Speak("Hi! How can I help you")
+                
+//                do {
+//                     audioPlayer = try AVAudioPlayer(contentsOf: recordStartSound)
+//                     audioPlayer.play()
+//                } catch {
+//                   // couldn't load file :(
+//                }
+//
+//                Speak("Hi! How can I help you")
+                
                 try startRecording()
-                recordButton.setTitle("Stop Recording", for: [])
+                //recordButton.setTitle("Stop Recording", for: [])
+                recordButton.setImage(UIImage(named: "finding"), for: .normal)
             } catch {
-                recordButton.setTitle("Recording Not Available", for: [])
+                //recordButton.setTitle("Recording Not Available", for: [])
+                recordButton.setImage(UIImage(named: "find"), for: .disabled)
             }
         }
     }
@@ -341,12 +367,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    
-    // MARK: - Status Bar: Hide
-    override var prefersStatusBarHidden : Bool {
-        return true
     }
     
     // MARK: - CoreML Vision Handling
@@ -528,6 +548,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         }else{return SCNVector3(0, 0, 0)}
     }
     
+    // MARK: - Fake NLU
+    
+    
     // MARK: - Audio
     
     /// Sets up the audio for playback.
@@ -580,6 +603,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         let utterance = AVSpeechUtterance(string: stringToSpeak)
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
+        // print(stringToSpeak)
         
     }
     
