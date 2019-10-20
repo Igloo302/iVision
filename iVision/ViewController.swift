@@ -8,15 +8,32 @@
 import UIKit
 import AVFoundation
 import Vision
-
+import Speech
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SFSpeechRecognizerDelegate {
     
+    // MARK: Properties
     let showLayer = false
     let showNode = true
+    let runCoreML = true
     
+    
+    // 语音转录变量
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))!
+    
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    
+    private var recognitionTask: SFSpeechRecognitionTask?
+    
+    private let audioEngine = AVAudioEngine()
+    
+    @IBOutlet var recordButton: UIButton!
+    
+    @IBOutlet var textView: UITextView!
+    
+    // CoreML变量
     public static let inputWidth = 416
     public static let inputHeight = 416
     public static let maxBoundingBoxes = 10
@@ -69,8 +86,8 @@ class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 执行 UIView
-        // setupAVCapture()
+        // Disable the record buttons until authorization has been granted.
+        recordButton.isEnabled = false
         
         // Set the view's delegate
         sceneView.delegate = self
@@ -149,6 +166,41 @@ class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
         sceneView.session.run(configuration)
         print("😎AR Configuration载入成功")
         
+        // 语音转录
+        // Configure the SFSpeechRecognizer object already
+        // stored in a local member variable.
+        speechRecognizer.delegate = self
+        
+        // Asynchronously make the authorization request.
+        SFSpeechRecognizer.requestAuthorization { authStatus in
+
+            // Divert to the app's main thread so that the UI
+            // can be updated.
+            OperationQueue.main.addOperation {
+                switch authStatus {
+                case .authorized:
+                    self.recordButton.isEnabled = true
+                    print("😎SFSpeechRecognizer载入完成")
+                    
+                case .denied:
+                    self.recordButton.isEnabled = false
+                    self.recordButton.setTitle("User denied access to speech recognition", for: .disabled)
+                    
+                case .restricted:
+                    self.recordButton.isEnabled = false
+                    self.recordButton.setTitle("Speech recognition restricted on this device", for: .disabled)
+                    
+                case .notDetermined:
+                    self.recordButton.isEnabled = false
+                    self.recordButton.setTitle("Speech recognition not yet authorized", for: .disabled)
+                    
+                default:
+                    self.recordButton.isEnabled = false
+                    
+                }
+            }
+        }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -156,6 +208,97 @@ class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
         
         // Pause the view's session
         sceneView.session.pause()
+    }
+    
+    private func startRecording() throws {
+        
+        // Cancel the previous task if it's running.
+        recognitionTask?.cancel()
+        self.recognitionTask = nil
+        
+        // Configure the audio session for the app.
+        let audioSession = AVAudioSession.sharedInstance()
+        try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        let inputNode = audioEngine.inputNode
+
+        // Create and configure the speech recognition request.
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        guard let recognitionRequest = recognitionRequest else { fatalError("Unable to create a SFSpeechAudioBufferRecognitionRequest object") }
+        recognitionRequest.shouldReportPartialResults = true
+        
+        // Keep speech recognition data on device
+        if #available(iOS 13, *) {
+            recognitionRequest.requiresOnDeviceRecognition = false
+        }
+        
+        // Create a recognition task for the speech recognition session.
+        // Keep a reference to the task so that it can be canceled.
+        recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
+            var isFinal = false
+            
+            if let result = result {
+                // Update the text view with the results.
+                self.textView.text = result.bestTranscription.formattedString
+                isFinal = result.isFinal
+                print("Text \(result.bestTranscription.formattedString)")
+            }
+            
+            if error != nil || isFinal {
+                // Stop recognizing speech if there is a problem.
+                self.audioEngine.stop()
+                inputNode.removeTap(onBus: 0)
+
+                self.recognitionRequest = nil
+                self.recognitionTask = nil
+
+                self.recordButton.isEnabled = true
+                self.recordButton.setTitle("Start Recording", for: [])
+            }
+        }
+
+        // Configure the microphone input.
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+            self.recognitionRequest?.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        try audioEngine.start()
+        
+        // Let the user know to start talking.
+        textView.text = "(Go ahead, I'm listening)"
+    }
+    
+    // MARK: SFSpeechRecognizerDelegate
+    
+    public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
+        if available {
+            recordButton.isEnabled = true
+            recordButton.setTitle("Start Recording", for: [])
+        } else {
+            recordButton.isEnabled = false
+            recordButton.setTitle("Recognition Not Available", for: .disabled)
+        }
+    }
+    
+    // MARK: Interface Builder actions
+    
+    @IBAction func recordButtonTapped() {
+        if audioEngine.isRunning {
+            audioEngine.stop()
+            recognitionRequest?.endAudio()
+            recordButton.isEnabled = false
+            recordButton.setTitle("Stopping", for: .disabled)
+        } else {
+            do {
+                //Speak("Hi! How can I help you")
+                try startRecording()
+                recordButton.setTitle("Stop Recording", for: [])
+            } catch {
+                recordButton.setTitle("Recording Not Available", for: [])
+            }
+        }
     }
     
     // MARK: - ARSessionDelegate
@@ -169,10 +312,10 @@ class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
             return
         }
         
-        // Retain the image buffer for Vision processing.
-        // self.pixbuff = frame.capturedImage
-        
-        updateCoreML()
+        if runCoreML {
+            updateCoreML()
+        }
+       
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
@@ -205,29 +348,6 @@ class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
     override var prefersStatusBarHidden : Bool {
         return true
     }
-    
-    // MARK: - Interaction
-    
-    
-    //    @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
-    //
-    //        // 真正的位置！
-    //        // print("🌚latestPredictionPosition", latestPredictionPosition)
-    //        let HitTestResults : [ARHitTestResult] = sceneView.hitTest(latestPredictionPosition, types: [.featurePoint])
-    //
-    //        if let closestResult = HitTestResults.first {
-    //            // Get Coordinates of HitTest
-    //            let transform : matrix_float4x4 = closestResult.worldTransform
-    //            let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-    //
-    //            // Create 3D Text
-    //            let node : SCNNode = createNewBubbleParentNode(latestPrediction)
-    //            sceneView.scene.rootNode.addChildNode(node)
-    //            node.position = worldCoord
-    //            node.name = latestPrediction
-    //            print(worldCoord)
-    //        }
-    //    }
     
     // MARK: - CoreML Vision Handling
     
@@ -460,10 +580,6 @@ class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
         let utterance = AVSpeechUtterance(string: stringToSpeak)
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
-        
-        //        let avMaterial = SCNMaterial()
-        //        avMaterial.diffuse.contents = synthesizer
-        //        bubble.materials = [avMaterial]
         
     }
     

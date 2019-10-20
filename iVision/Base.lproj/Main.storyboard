@@ -28,7 +28,10 @@
                                     <constraint firstAttribute="width" constant="100" id="F0T-6j-KhK"/>
                                     <constraint firstAttribute="height" constant="100" id="sUH-CE-8dI"/>
                                 </constraints>
-                                <state key="normal" image="find"/>
+                                <state key="normal" title="Start Recording!" image="find"/>
+                                <connections>
+                                    <action selector="recordButtonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ecv-d4-Qtj"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="49I-uR-yJw">
                                 <rect key="frame" x="40" y="20" width="50" height="50"/>
@@ -39,13 +42,13 @@
                                 <state key="normal" title="Button" image="object"/>
                             </button>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kQO-AW-wEs">
-                                <rect key="frame" x="336.33333333333331" y="20.000000000000004" width="57.666666666666686" height="36.333333333333343"/>
+                                <rect key="frame" x="327" y="20" width="67" height="37"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Jhv-Vh-2yS">
-                                    <rect key="frame" x="0.0" y="0.0" width="57.666666666666686" height="36.333333333333343"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="67" height="37"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h3J-2n-FcQ">
-                                            <rect key="frame" x="8" y="7.9999999999999982" width="41.666666666666664" height="20.333333333333329"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="iVision" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h3J-2n-FcQ">
+                                            <rect key="frame" x="8" y="8" width="51" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -60,6 +63,16 @@
                                 </view>
                                 <blurEffect style="regular"/>
                             </visualEffectView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="TXg-WK-ZFn">
+                                <rect key="frame" x="0.0" y="706" width="414" height="30"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Et2-Gw-cGc"/>
+                                </constraints>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -70,14 +83,19 @@
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="JRf-ya-Geq"/>
                             <constraint firstAttribute="bottom" secondItem="UQG-yk-ma9" secondAttribute="bottom" id="Oty-V3-qJj"/>
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="QD8-4n-bQQ"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TXg-WK-ZFn" secondAttribute="bottom" id="WBg-rR-Xgo"/>
+                            <constraint firstAttribute="trailing" secondItem="TXg-WK-ZFn" secondAttribute="trailing" id="bIp-Zg-gTz"/>
                             <constraint firstItem="kQO-AW-wEs" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="gnj-sY-4Sa"/>
+                            <constraint firstItem="TXg-WK-ZFn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="nxu-yg-sSn"/>
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="trailing" secondItem="kQO-AW-wEs" secondAttribute="trailing" constant="20" id="ttv-10-pez"/>
                             <constraint firstItem="49I-uR-yJw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="v5O-5V-zME"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="debugTextView" destination="h3J-2n-FcQ" id="zEo-Sl-Msl"/>
+                        <outlet property="recordButton" destination="d0g-yA-FJe" id="P0L-xO-xFo"/>
                         <outlet property="sceneView" destination="UQG-yk-ma9" id="NLk-K6-5FB"/>
+                        <outlet property="textView" destination="TXg-WK-ZFn" id="Kf9-1Q-VPT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
