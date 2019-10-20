@@ -55,7 +55,7 @@ class ViewController: UIViewController,ARSCNViewDelegate,ARSessionDelegate {
     // COREML
     var visionRequests = [VNRequest]()
     
-    @IBOutlet weak var debugTextView: UITextView!
+    @IBOutlet weak var debugTextView: UILabel!
     
     @IBOutlet weak var sceneView: ARSCNView!
     

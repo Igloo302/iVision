@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0300B8AF234B41190061C02E /* VNCoreMLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB417F52099308400494E9C /* VNCoreMLRequest.swift */; };
 		033DB90A2359D5150062B8B4 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
 		039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */; };
 		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
@@ -33,7 +32,6 @@
 		B972A080B9729F9000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		C2A2AB60C2A2AB2000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Breakfast Finder Logo.png"; sourceTree = SOURCE_ROOT; };
-		FAB417F52099308400494E9C /* VNCoreMLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VNCoreMLRequest.swift; sourceTree = "<group>"; };
 		FAD5009B1ED668B60074D713 /* iVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD5009E1ED668B60074D713 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAD500A01ED668B60074D713 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -104,7 +102,6 @@
 				039DC1B6235C497300C5E7E7 /* Resources */,
 				FAD5009E1ED668B60074D713 /* AppDelegate.swift */,
 				FAD500A01ED668B60074D713 /* ViewController.swift */,
-				FAB417F52099308400494E9C /* VNCoreMLRequest.swift */,
 				033DB90B2359E64C0062B8B4 /* YOLO.swift */,
 				033DB90F2359E74D0062B8B4 /* CVPixelBuffer+Helpers.swift */,
 				033DB9112359E7710062B8B4 /* UIImage+CVPixelBuffer.swift */,
@@ -198,7 +195,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				033DB90A2359D5150062B8B4 /* YOLOv3Tiny.mlmodel in Sources */,
-				0300B8AF234B41190061C02E /* VNCoreMLRequest.swift in Sources */,
 				FAD500A11ED668B60074D713 /* ViewController.swift in Sources */,
 				FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */,
 			);
