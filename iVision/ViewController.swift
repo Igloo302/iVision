@@ -19,6 +19,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     let showNode = true
     let runCoreML = true
     
+    // 界面按钮
+    
     
     // 语音转录变量
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))!
@@ -34,7 +36,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
 
     @IBOutlet var recordButton: UIButton!
     
-    @IBOutlet var textView: UITextView!
+    //@IBOutlet var textView: UITextView!
+    
+    @IBOutlet var textView: UILabel!
     
     // CoreML变量
     public static let inputWidth = 416
