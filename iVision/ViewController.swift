@@ -25,6 +25,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     @IBOutlet var settingButton: UIButton!
     @IBOutlet var addButton: UIButton!
     
+    
     // 语音转录变量
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))!
     
@@ -38,8 +39,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
 //    var audioPlayer = AVAudioPlayer()
 
     @IBOutlet var recordButton: UIButton!
-    
-    //@IBOutlet var textView: UITextView!
     
     @IBOutlet var textView: UILabel!
     

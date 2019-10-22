@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0B235CAFF50089C4EA /* btn_recordStop.wav */; };
 		03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0C235CAFF50089C4EA /* btn_recordStart.wav */; };
+		03108317235F410F00533B45 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03108316235F410F00533B45 /* SettingTableViewController.swift */; };
 		039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */; };
 		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
 		03C4F605235E00AF00862597 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C4F604235E00AF00862597 /* HelpViewController.swift */; };
 		8DEBA931235E9C3400780699 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
-		8DEBA933235EA06300780699 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEBA932235EA06300780699 /* SettingViewController.swift */; };
 		FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */; };
 		FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD5009E1ED668B60074D713 /* AppDelegate.swift */; };
 		FAD500A11ED668B60074D713 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD500A01ED668B60074D713 /* ViewController.swift */; };
@@ -25,12 +25,12 @@
 /* Begin PBXFileReference section */
 		03089F0B235CAFF50089C4EA /* btn_recordStop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStop.wav; sourceTree = "<group>"; };
 		03089F0C235CAFF50089C4EA /* btn_recordStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStart.wav; sourceTree = "<group>"; };
+		03108316235F410F00533B45 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		032557EF2349B902004A44C7 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
 		032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3Tiny.mlmodel; sourceTree = "<group>"; };
 		039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = keyboard.mp3; sourceTree = "<group>"; };
 		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
 		03C4F604235E00AF00862597 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
-		8DEBA932235EA06300780699 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		B9491870B9491B3000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		B972A080B9729F9000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		C2A2AB60C2A2AB2000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -108,7 +108,7 @@
 				FAD5009E1ED668B60074D713 /* AppDelegate.swift */,
 				FAD500A01ED668B60074D713 /* ViewController.swift */,
 				FAD500A21ED668B60074D713 /* Main.storyboard */,
-				8DEBA932235EA06300780699 /* SettingViewController.swift */,
+				03108316235F410F00533B45 /* SettingTableViewController.swift */,
 				03C4F604235E00AF00862597 /* HelpViewController.swift */,
 				FAD500A51ED668B60074D713 /* Assets.xcassets */,
 				FAD500A71ED668B60074D713 /* LaunchScreen.storyboard */,
@@ -198,7 +198,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DEBA933235EA06300780699 /* SettingViewController.swift in Sources */,
+				03108317235F410F00533B45 /* SettingTableViewController.swift in Sources */,
 				8DEBA931235E9C3400780699 /* YOLOv3Tiny.mlmodel in Sources */,
 				FAD500A11ED668B60074D713 /* ViewController.swift in Sources */,
 				FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */,
