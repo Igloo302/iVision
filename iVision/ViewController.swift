@@ -15,32 +15,30 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SFSpeechRecognizerDelegate {
     
     // MARK: Properties
-    let runARSession = false
-    let showLayer = false
-    let showNode = true
-    let runCoreML = true
+    let runARSession = true
+    var showLayer = false
+    var showNode = true
+    var runCoreML = true
     
-    // 界面按钮
+    
+    // 界面UI
     @IBOutlet var helpButton: UIButton!
     @IBOutlet var settingButton: UIButton!
     @IBOutlet var addButton: UIButton!
-    
+    @IBOutlet var recordButton: UIButton!
+    @IBOutlet var textView: UILabel!
+    @IBOutlet weak var debugTextView: UILabel!
+    @IBOutlet weak var sceneView: ARSCNView!
     
     // 语音转录变量
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))!
-    
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
-    
     private var recognitionTask: SFSpeechRecognitionTask?
-    
     private let audioEngine = AVAudioEngine()
+    var userCommand = ""
     
 //    let recordStartSound = URL(fileURLWithPath: Bundle.main.path(forResource: "btn_recordStart", ofType: "wav")!)
 //    var audioPlayer = AVAudioPlayer()
-
-    @IBOutlet var recordButton: UIButton!
-    
-    @IBOutlet var textView: UILabel!
     
     // CoreML变量
     public static let inputWidth = 416
@@ -59,7 +57,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         let classIndex: Int
         let score: Float
         let rect: CGRect
-        let worldCoord: [SCNVector3]
+        let worldCoord: SCNVector3
     }
     
     var predictions = [Prediction]()
@@ -67,7 +65,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     // 识别到的物体的名字
     var labels = [String]()
-    let labelsInChinese = [String]()
+    
+    struct object{
+        let chinese:[String]
+        let english:[String]
+    }
+    
+    let labelsList = [object(chinese: ["显示器","液晶屏"], english: ["tvmonitor"]),
+                     object(chinese: ["椅子","凳子"], english: ["chair"]),
+                     object(chinese: ["盆栽","盆景"], english: ["pottedplant"]),
+                     object(chinese: ["瓶子"], english: ["bottle"]),
+                     object(chinese: ["水杯","瓶子","杯子"], english: ["cup"]),
+                     object(chinese: ["香蕉"], english: ["banana"]),
+                     object(chinese: ["苹果"], english: ["apple"]),
+                     object(chinese: ["书"], english: ["book"]),
+                     object(chinese: ["包"], english: ["bag"]),
+                     object(chinese: ["鼠标"], english: ["mouse"]),
+                     object(chinese: ["手机"], english: ["cell phone"])
+    ]
     
     //计时器
     var startTimes: [CFTimeInterval] = []
@@ -82,15 +97,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     // COREML
     var visionRequests = [VNRequest]()
     
-    @IBOutlet weak var debugTextView: UILabel!
-    
-    @IBOutlet weak var sceneView: ARSCNView!
-    
     let bubbleDepth : Float = 0.01 // the 'depth' of 3D text 文字的厚度
-    
-    // variable containing the latest CoreML prediction & position
-    var latestPrediction : String = ""
-    var latestPredictionPosition: CGPoint = .zero
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -186,6 +193,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         }
         
         
+        
         // 语音转录
         // Configure the SFSpeechRecognizer object already
         // stored in a local member variable.
@@ -200,7 +208,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 switch authStatus {
                 case .authorized:
                     self.recordButton.isEnabled = true
-                    print("😎SFSpeechRecognizer载入完成")
                     
                 case .denied:
                     self.recordButton.isEnabled = false
@@ -243,9 +250,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         self.recognitionTask = nil
         
         // Configure the audio session for the app.
-        let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
-        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        // let audioSession = AVAudioSession.sharedInstance()
+        try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
+        try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
         let inputNode = audioEngine.inputNode
 
         // Create and configure the speech recognition request.
@@ -267,11 +274,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 // Update the text view with the results.
                 self.textView.text = result.bestTranscription.formattedString
                 isFinal = result.isFinal
-                print("Text \(result.bestTranscription.formattedString)")
+                // print("Text \(result.bestTranscription.formattedString)")
+                self.userCommand = result.bestTranscription.formattedString
             }
             
             if error != nil || isFinal {
-                // Stop recognizing speech if there is a problem.
+                // Stop recognizing speech if there is a problem. 这个地方的问题是应该不存在result.Final的情况
                 self.audioEngine.stop()
                 inputNode.removeTap(onBus: 0)
 
@@ -294,7 +302,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         try audioEngine.start()
         
         // Let the user know to start talking.
-        textView.text = "(Go ahead, I'm listening)"
+        textView.text = "你要找什么？"
     }
     
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
@@ -318,18 +326,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             recordButton.isEnabled = false
             //recordButton.setTitle("Stopping", for: .disabled)
             recordButton.setImage(UIImage(named: "find"), for: .disabled)
+            
+            // 把音频模式改回来
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.soloAmbient)
+                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+            } catch {}
+            
+            // 调用关键词匹配
+            search(objectIsWanted(from: userCommand))
+            
         } else {
             do {
-                
-//                do {
-//                     audioPlayer = try AVAudioPlayer(contentsOf: recordStartSound)
-//                     audioPlayer.play()
-//                } catch {
-//                   // couldn't load file :(
-//                }
-//
-//                Speak("Hi! How can I help you")
-                
+                Speak("what do you want?")
                 try startRecording()
                 //recordButton.setTitle("Stop Recording", for: [])
                 recordButton.setImage(UIImage(named: "finding"), for: .normal)
@@ -338,6 +347,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 recordButton.setImage(UIImage(named: "find"), for: .disabled)
             }
         }
+    }
+    
+    @IBAction func addButtonTapped(){
+        Speak("Sorry. The function is under construction")
+        //                do {
+        //                     audioPlayer = try AVAudioPlayer(contentsOf: recordStartSound)
+        //                     audioPlayer.play()
+        //                } catch {
+        //                   // couldn't load file :(
+        //                }
+        //
     }
     
     // MARK: - ARSessionDelegate
@@ -460,10 +480,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 // updateNode
                 updateNode(predictions.last!)
                 
-                // 保存识别的结果
-                //self.latestPrediction = topLabelObservation.identifier
-                //self.latestPredictionPosition = CGPoint(x:objectBounds.midY, y: objectBounds.midX)
-                
                 DispatchQueue.main.async {
                     self.updateUI(topLabelObservation)
                     
@@ -484,7 +500,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         for node in nodes {
             if node.name == labels[prediction.classIndex]{
                 // print("Change Position")
-                node.position = prediction.worldCoord.first!
+                node.position = prediction.worldCoord
                 nodeExsit = true
                 continue
             }
@@ -497,7 +513,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             
 
             
-            node.position = prediction.worldCoord.first!
+            node.position = prediction.worldCoord
             node.name = labels[prediction.classIndex]
             
             nodes.append(node)
@@ -529,12 +545,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     func addToPredictions(_ rect: CGRect, identifier: String, confidence: VNConfidence){
         
-        let worldCoord = [getWorldCoord(rect)]
+        let worldCoord = getWorldCoord(rect)
         
         // 创建新prediction
         let prediction = Prediction(classIndex: getClassIndex(identifier: identifier), score: confidence * 100, rect: rect, worldCoord: worldCoord)
         
-        // print(prediction)
+        print(prediction)
         
         predictions.append(prediction)
     }
@@ -562,7 +578,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     }
     
     // MARK: - Fake NLU
+    func objectIsWanted(from userCommand: String) ->String {
+        for label in labelsList {
+            let name = label.chinese.first!
+            if userCommand.contains(name){
+                print("found",name)
+                //textView.text = String("我找到了" + name)
+                return name
+            }
+        }
+        //textView.text = "啥都没找到"
+        return("")
+    }
     
+    func search(_ object: String){
+        
+    }
     
     // MARK: - Audio
     
@@ -747,3 +778,4 @@ extension UIFont {
 fileprivate func convertFromCATextLayerAlignmentMode(_ input: CATextLayerAlignmentMode) -> String {
     return input.rawValue
 }
+
