@@ -1,3 +1,6 @@
 
 *.mlmodel
 .DS_Store
+iVision/.DS_Store
+iVision/Assets.xcassets/.DS_Store
+iVision/Assets.xcassets/.DS_Store

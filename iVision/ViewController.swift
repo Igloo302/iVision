@@ -15,12 +15,15 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SFSpeechRecognizerDelegate {
     
     // MARK: Properties
+    let runARSession = false
     let showLayer = false
     let showNode = true
     let runCoreML = true
     
     // 界面按钮
-    
+    @IBOutlet var helpButton: UIButton!
+    @IBOutlet var settingButton: UIButton!
+    @IBOutlet var addButton: UIButton!
     
     // 语音转录变量
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))!
@@ -94,7 +97,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 背景图设置
         recordButton.imageView?.contentMode = .scaleAspectFit
+        helpButton.imageView?.contentMode = .scaleAspectFit
+        settingButton.imageView?.contentMode = .scaleAspectFit
+        addButton.imageView?.contentMode = .scaleAspectFit
         
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
@@ -174,8 +181,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         // configuration.planeDetection = [.horizontal, .vertical]
         
         // Run the view's session
-        sceneView.session.run(configuration)
-        print("😎AR Configuration载入成功")
+        if runARSession {
+            sceneView.session.run(configuration)
+            print("😎AR Configuration载入成功")
+        }
+        
         
         // 语音转录
         // Configure the SFSpeechRecognizer object already
