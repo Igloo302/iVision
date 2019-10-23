@@ -54,34 +54,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     // 识别的物体
     struct Prediction {
-        let classIndex: Int
-        let score: Float
-        let rect: CGRect
-        let worldCoord: SCNVector3
+        var classIndex: Int
+        var score: Float
+        var rect: CGRect
+        var worldCoord: [SCNVector3]
     }
-    
     var predictions = [Prediction]()
-    var nodes = [SCNNode]()
     
-    // 识别到的物体的名字
-    var labels = [String]()
+    var nodes = [SCNNode]()
     
     struct object{
         let chinese:[String]
-        let english:[String]
+        let english:String
     }
     
-    let labelsList = [object(chinese: ["显示器","液晶屏"], english: ["tvmonitor"]),
-                     object(chinese: ["椅子","凳子"], english: ["chair"]),
-                     object(chinese: ["盆栽","盆景"], english: ["pottedplant"]),
-                     object(chinese: ["瓶子"], english: ["bottle"]),
-                     object(chinese: ["水杯","瓶子","杯子"], english: ["cup"]),
-                     object(chinese: ["香蕉"], english: ["banana"]),
-                     object(chinese: ["苹果"], english: ["apple"]),
-                     object(chinese: ["书"], english: ["book"]),
-                     object(chinese: ["包"], english: ["bag"]),
-                     object(chinese: ["鼠标"], english: ["mouse"]),
-                     object(chinese: ["手机"], english: ["cell phone"])
+    // 识别到的物体的字典
+    let labelsList = [object(chinese: ["显示器","液晶屏"], english: "tvmonitor"),
+                     object(chinese: ["椅子","凳子"], english: "chair"),
+                     object(chinese: ["盆栽","盆景"], english: "pottedplant"),
+                     object(chinese: ["瓶子"], english: "bottle"),
+                     object(chinese: ["水杯","瓶子","杯子"], english: "cup"),
+                     object(chinese: ["香蕉"], english: "banana"),
+                     object(chinese: ["苹果"], english: "apple"),
+                     object(chinese: ["书"], english: "book"),
+                     object(chinese: ["包"], english: "bag"),
+                     object(chinese: ["鼠标"], english: "mouse"),
+                     object(chinese: ["键盘"], english: "keyboard"),
+                     object(chinese: ["手机"], english: "cell phone")
     ]
     
     //计时器
@@ -333,9 +332,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
             } catch {}
             
-            // 调用关键词匹配
-            search(objectIsWanted(from: userCommand))
             
+            // 调用关键词匹配
+            let objectIndex = objectIsWanted(from: userCommand)
+            if objectIndex != -1 {
+                search(objectIndex)
+            }
         } else {
             do {
                 Speak("what do you want?")
@@ -473,12 +475,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             // 取置信度高的
             if topLabelObservation.confidence > confidenceThreshold {
                 
+                // 判断一下这个物体是不是在列表中的
+                let Index = getClassIndex(topLabelObservation.identifier)
+                if Index == -1{
+                    continue
+                }
+                
                 let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
                 
-                addToPredictions(objectBounds, identifier: topLabelObservation.identifier, confidence: topLabelObservation.confidence)
-                
-                // updateNode
-                updateNode(predictions.last!)
+                updatePredictions(objectBounds, Index: Index, confidence: topLabelObservation.confidence)
                 
                 DispatchQueue.main.async {
                     self.updateUI(topLabelObservation)
@@ -494,76 +499,52 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
     }
     
-    // 添加Node或者移动Node位置
-    func updateNode(_ prediction: Prediction){
-        var nodeExsit = false
-        for node in nodes {
-            if node.name == labels[prediction.classIndex]{
-                // print("Change Position")
-                node.position = prediction.worldCoord
-                nodeExsit = true
-                continue
+    
+    
+    
+    func updatePredictions(_ rect: CGRect, Index: Int, confidence: VNConfidence){
+        if let i = predictions.firstIndex(where: {$0.classIndex == Index}){
+            // 如果已经存在，就更新这个prediction
+            predictions[i].score = 100 * confidence
+            predictions[i].rect = rect
+            predictions[i].worldCoord.append(getWorldCoord(rect))
+            // 移动node位置
+            if let j = nodes.firstIndex(where: {getClassIndex($0.name!) == Index}){
+                nodes[j].position = predictions[i].worldCoord.last!
             }
-        }
-        if !nodeExsit{
+            
+            
+        }else{
+            // 如果没有这个prediction，就创建新prediction
+            let prediction = Prediction(classIndex: Index,
+                                        score: confidence * 100,
+                                        rect: rect,
+                                        worldCoord: [getWorldCoord(rect)])
+            //print(prediction)
+            predictions.append(prediction)
+            //创建新node
             // print("Add New Node")
-            let node = createNewBubbleParentNode(labels[prediction.classIndex])
-            
-            //print(labels[prediction.classIndex])
-            
+            let node = createNewBubbleParentNode(labelsList[Index].english)
 
             
-            node.position = prediction.worldCoord
-            node.name = labels[prediction.classIndex]
-            
+            node.position = prediction.worldCoord.last!
+            node.name = labelsList[Index].english
             nodes.append(node)
-            
             if showNode{
                 sceneView.scene.rootNode.addChildNode(node)
             }
-            
-            // 播放音乐
-            if labels[prediction.classIndex] == "keyboard" {
-                
-                Speak(String(labels[prediction.classIndex] + " is here"))
-                setUpAudio(name:labels[prediction.classIndex])
-                
-                // Ensure there is only one audio player
-                node.removeAllAudioPlayers()
-                
-                // Create a player from the source and add it to `objectNode`
-                node.addAudioPlayer(SCNAudioPlayer(source: audioSource))
-                
-                
-                
-            }
         }
     }
     
-    
-    
-    
-    func addToPredictions(_ rect: CGRect, identifier: String, confidence: VNConfidence){
-        
-        let worldCoord = getWorldCoord(rect)
-        
-        // 创建新prediction
-        let prediction = Prediction(classIndex: getClassIndex(identifier: identifier), score: confidence * 100, rect: rect, worldCoord: worldCoord)
-        
-        print(prediction)
-        
-        predictions.append(prediction)
-    }
-    
-    func getClassIndex(identifier: String) -> Int{
-        if let indexOf = labels.firstIndex(of: identifier) {
-            return indexOf
+    func getClassIndex(_ identifier: String) -> Int{
+        if let i = labelsList.firstIndex(where: {$0.english == identifier}){
+            return i
         }else{
-            labels.append(identifier)
-            return labels.firstIndex(of: identifier)!
+            return -1
         }
     }
     
+    // Hittest获得世界坐标
     func getWorldCoord(_ rect: CGRect) -> SCNVector3{
         
         let screenPoint = CGPoint(x:rect.midY, y: rect.midX)
@@ -578,43 +559,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     }
     
     // MARK: - Fake NLU
-    func objectIsWanted(from userCommand: String) ->String {
+    func objectIsWanted(from userCommand: String) -> Int {
         for label in labelsList {
-            let name = label.chinese.first!
-            if userCommand.contains(name){
-                print("found",name)
-                //textView.text = String("我找到了" + name)
-                return name
+            for name in label.chinese {
+                if userCommand.contains(name){
+                    print("想找的是", name,label.english, getClassIndex(label.english))
+                    return getClassIndex(label.english)
+                }
             }
         }
-        //textView.text = "啥都没找到"
-        return("")
+        // 没有解析到关键词
+        Speak("I don‘t understand you")
+        return -1
     }
     
-    func search(_ object: String){
-        
+    func search(_ Index: Int){
+        let name = labelsList[Index].english
+        if let i = nodes.firstIndex(where: {$0.name == name}){
+            // 存在这个node
+            Speak(String(name + " is here"))
+            setUpAudio(name)
+            nodes[i].removeAllAudioPlayers()
+            nodes[i].addAudioPlayer(SCNAudioPlayer(source: audioSource))
+        } else{
+            // 不存在这个node
+            Speak(String("I don't find " + name))
+        }
     }
     
     // MARK: - Audio
     
     /// Sets up the audio for playback.
     /// - Tag: SetUpAudio
-    private func setUpAudio(name: String) {
+    private func setUpAudio(_ name: String) {
+        
         // Instantiate the audio source
-        audioSource = SCNAudioSource(fileNamed: "\(name).mp3")!
+        audioSource = SCNAudioSource(fileNamed: "default.mp3")
+        //audioSource = SCNAudioSource(fileNamed: "\(name).mp3")
         // As an environmental sound layer, audio should play indefinitely
         audioSource.loops = true
         // Decode the audio from disk ahead of time to prevent a delay in playback
         audioSource.load()
-    }
-    
-    /// Plays a sound on the `objectNode` using SceneKit's positional audio
-    /// - Tag: AddAudioPlayer
-    private func playSound() {
-        // Ensure there is only one audio player
-        cube.removeAllAudioPlayers()
-        // Create a player from the source and add it to `objectNode`
-        cube.addAudioPlayer(SCNAudioPlayer(source: audioSource))
     }
     
     

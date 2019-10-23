@@ -10,6 +10,9 @@
 		03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0B235CAFF50089C4EA /* btn_recordStop.wav */; };
 		03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0C235CAFF50089C4EA /* btn_recordStart.wav */; };
 		03108317235F410F00533B45 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03108316235F410F00533B45 /* SettingTableViewController.swift */; };
+		035336582360B82300C0CD02 /* cup.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 035336572360B82300C0CD02 /* cup.mp3 */; };
+		0353365B2360B95C00C0CD02 /* mouse.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 035336592360B95C00C0CD02 /* mouse.mp3 */; };
+		0353365C2360B95C00C0CD02 /* default.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0353365A2360B95C00C0CD02 /* default.mp3 */; };
 		039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */; };
 		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
 		03C4F605235E00AF00862597 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C4F604235E00AF00862597 /* HelpViewController.swift */; };
@@ -28,6 +31,9 @@
 		03108316235F410F00533B45 /* SettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
 		032557EF2349B902004A44C7 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
 		032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3Tiny.mlmodel; sourceTree = "<group>"; };
+		035336572360B82300C0CD02 /* cup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = cup.mp3; sourceTree = "<group>"; };
+		035336592360B95C00C0CD02 /* mouse.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = mouse.mp3; sourceTree = "<group>"; };
+		0353365A2360B95C00C0CD02 /* default.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = default.mp3; sourceTree = "<group>"; };
 		039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = keyboard.mp3; sourceTree = "<group>"; };
 		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
 		03C4F604235E00AF00862597 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +67,9 @@
 				03089F0C235CAFF50089C4EA /* btn_recordStart.wav */,
 				03089F0B235CAFF50089C4EA /* btn_recordStop.wav */,
 				039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */,
+				0353365A2360B95C00C0CD02 /* default.mp3 */,
+				035336592360B95C00C0CD02 /* mouse.mp3 */,
+				035336572360B82300C0CD02 /* cup.mp3 */,
 				039DC1B4235C494500C5E7E7 /* fireplace.mp3 */,
 			);
 			path = Resources;
@@ -180,11 +189,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				035336582360B82300C0CD02 /* cup.mp3 in Resources */,
 				FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */,
 				FAD500A91ED668B60074D713 /* LaunchScreen.storyboard in Resources */,
+				0353365C2360B95C00C0CD02 /* default.mp3 in Resources */,
 				03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */,
 				039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */,
 				FAD500A61ED668B60074D713 /* Assets.xcassets in Resources */,
+				0353365B2360B95C00C0CD02 /* mouse.mp3 in Resources */,
 				039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */,
 				FAD500A41ED668B60074D713 /* Main.storyboard in Resources */,
 				03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */,
