@@ -1,4 +1,5 @@
-# iVision: An assistive system for the blind based on augmented reality and machine learning
+# iVision
+An assistive system for the blind based on augmented reality and machine learning
 
 ## SYSTEM DESIGN
 
