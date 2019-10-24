@@ -85,6 +85,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                      object(chinese: ["手机"], english: "cell phone")
     ]
     
+    //追踪模式
+    var trackingNodeState = false
+    var trackingNodeID:Int = 0
+    
     //计时器
     var startTimes: [CFTimeInterval] = []
     
@@ -194,8 +198,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             sceneView.session.run(configuration)
             print("😎AR Configuration载入成功")
         }
-        
-        
         
         // 语音转录
         // Configure the SFSpeechRecognizer object already
@@ -374,6 +376,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         stopButton.isHidden = true
         recordButton.isHidden = false
+        trackingNodeState = false
         
         // 移除声音
         for node in nodes {
@@ -432,6 +435,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         if runCoreML {
             updateCoreML()
         }
+        
        
     }
     
@@ -468,11 +472,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     // ✌️重要！把画面弄到core ML模型进行识别的部分！
     func updateCoreML() {
+    
+        // 追踪状态
+        if trackingNodeState {
+            let distance = distanceBetween(sceneView.pointOfView!.position, nodes[trackingNodeID].position)
+            //print(distance)
+            
+            if distance < 0.4 {
+                Speak("就在你手边啦")
+                // 把音频速度调快
+                guard let player = nodes[trackingNodeID].audioPlayers.first,
+                    let avNode = player.audioNode as? AVAudioMixing else {
+                        return
+                }
+                avNode.rate = 2
+                
+                trackingNodeState = false
+                print("退出追踪状态")
+            }
+        }
+        
+        
         // Get Camera Image as RGB SCENEVIEW的图片就用当前帧的画面弄出来就行
         pixbuff  = sceneView.session.currentFrame?.capturedImage
-        
-        
-        // if pixbuff == nil { return }
         
         // 计时器
         startTimes.append(CACurrentMediaTime())
@@ -567,15 +589,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     // MARK: - Point Control
     
     func updatePredictions(_ rect: CGRect, Index: Int, confidence: VNConfidence){
-        // 判断这个点和手机当前位置不能太近
-        guard getWorldCoord(rect).x != 0 else{
+        // 判断这个点和手机当前位置不能太近,看似是很有效的调节
+        let worldCoord = getWorldCoord(rect)
+        guard worldCoord.x != 0 && distanceBetween(worldCoord, sceneView.pointOfView!.position) > 0.1 else{
             return
         }
         if let i = predictions.firstIndex(where: {$0.classIndex == Index}){
             // 如果已经存在，就更新这个prediction
                 predictions[i].score = 100 * confidence
                 predictions[i].rect = rect
-                predictions[i].worldCoord.append(getWorldCoord(rect))
+                predictions[i].worldCoord.append(worldCoord)
                 // 移动node位置
                 if let j = nodes.firstIndex(where: {getClassIndex($0.name!) == Index}){
                     nodes[j].position = predictions[i].worldCoord.last!
@@ -585,7 +608,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             let prediction = Prediction(classIndex: Index,
                                         score: confidence * 100,
                                         rect: rect,
-                                        worldCoord: [getWorldCoord(rect)])
+                                        worldCoord: [worldCoord])
             //print(prediction)
             predictions.append(prediction)
             //创建新node
@@ -644,7 +667,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     func search(_ Index: Int){
         if let i = nodes.firstIndex(where: {$0.name == labelsList[Index].english}){
             // 存在这个node
-            Speak(String(labelsList[Index].chinese.first! + "在这儿"))
+            let distance = distanceBetween(sceneView.pointOfView!.position, nodes[i].position)
+            
+            Speak(String(format: labelsList[Index].chinese.first! + "在距离你%.1f 米处", distance))
+            
+            // 播放node上的声音
             setUpAudio(labelsList[Index].english)
             nodes[i].removeAllAudioPlayers()
             nodes[i].addAudioPlayer(SCNAudioPlayer(source: audioSource))
@@ -653,15 +680,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             recordButton.isHidden = true
             stopButton.isHidden = false
             
+            // 开启追踪模式
+            trackingNodeState = true
+            trackingNodeID = i
+            print("进入追踪模式")
+            
         } else{
             // 不存在这个node
-            waitFor(Index)
+            exploreFor(Index)
         }
     }
     
-    func waitFor(_ Index: Int){
-        Speak(String("没找到" + labelsList[Index].chinese.first!))
+    // 进入寻找模式
+    func OnTracking(_ node: SCNNode){
+
+    }
+    
+    func distanceBetween(_ position1:SCNVector3,_ position2:SCNVector3) -> Float{
+        return GLKVector3Distance(SCNVector3ToGLKVector3(position1), SCNVector3ToGLKVector3(position2))
+    }
+    
+        
+    // 进入探索模式
+    func exploreFor(_ Index: Int){
+        Speak(String("当前视野未找到" + labelsList[Index].chinese.first! + ",请换个位置试试"))
         // 增加wait
+        
     }
     
     // MARK: - Audio
@@ -671,7 +715,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     private func setUpAudio(_ name: String) {
         
         // Instantiate the audio source
-        audioSource = SCNAudioSource(fileNamed: "fireplace.mp3")
+        audioSource = SCNAudioSource(fileNamed: "cup.mp3")
         //audioSource = SCNAudioSource(fileNamed: "\(name).mp3")
         // As an environmental sound layer, audio should play indefinitely
         audioSource.loops = true
