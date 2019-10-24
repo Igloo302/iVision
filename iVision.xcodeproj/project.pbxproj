@@ -13,7 +13,6 @@
 		035336582360B82300C0CD02 /* cup.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 035336572360B82300C0CD02 /* cup.mp3 */; };
 		0353365B2360B95C00C0CD02 /* mouse.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 035336592360B95C00C0CD02 /* mouse.mp3 */; };
 		0353365C2360B95C00C0CD02 /* default.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0353365A2360B95C00C0CD02 /* default.mp3 */; };
-		039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */; };
 		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
 		03C4F605235E00AF00862597 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C4F604235E00AF00862597 /* HelpViewController.swift */; };
 		8DEBA931235E9C3400780699 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
@@ -34,7 +33,6 @@
 		035336572360B82300C0CD02 /* cup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = cup.mp3; sourceTree = "<group>"; };
 		035336592360B95C00C0CD02 /* mouse.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = mouse.mp3; sourceTree = "<group>"; };
 		0353365A2360B95C00C0CD02 /* default.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = default.mp3; sourceTree = "<group>"; };
-		039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = keyboard.mp3; sourceTree = "<group>"; };
 		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
 		03C4F604235E00AF00862597 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		B9491870B9491B3000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -66,7 +64,6 @@
 			children = (
 				03089F0C235CAFF50089C4EA /* btn_recordStart.wav */,
 				03089F0B235CAFF50089C4EA /* btn_recordStop.wav */,
-				039DC1B2235C3B5D00C5E7E7 /* keyboard.mp3 */,
 				0353365A2360B95C00C0CD02 /* default.mp3 */,
 				035336592360B95C00C0CD02 /* mouse.mp3 */,
 				035336572360B82300C0CD02 /* cup.mp3 */,
@@ -197,7 +194,6 @@
 				039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */,
 				FAD500A61ED668B60074D713 /* Assets.xcassets in Resources */,
 				0353365B2360B95C00C0CD02 /* mouse.mp3 in Resources */,
-				039DC1B3235C3B5E00C5E7E7 /* keyboard.mp3 in Resources */,
 				FAD500A41ED668B60074D713 /* Main.storyboard in Resources */,
 				03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */,
 			);

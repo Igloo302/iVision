@@ -22,6 +22,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     
     // 界面UI
+    
+    @IBOutlet var stopButton: UIButton!
     @IBOutlet var helpButton: UIButton!
     @IBOutlet var settingButton: UIButton!
     @IBOutlet var addButton: UIButton!
@@ -38,13 +40,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     private let audioEngine = AVAudioEngine()
     var userCommand = ""
     
+    // 声音播放
 //    let recordStartSound = URL(fileURLWithPath: Bundle.main.path(forResource: "btn_recordStart", ofType: "wav")!)
+//    let recordStopSound = URL(fileURLWithPath: Bundle.main.path(forResource: "btn_recordStop", ofType: "wav")!)
 //    var audioPlayer = AVAudioPlayer()
-    
-    // CoreML变量
-    public static let inputWidth = 416
-    public static let inputHeight = 416
-    public static let maxBoundingBoxes = 10
     
     var audioSource: SCNAudioSource!
     var cube = SCNNode(geometry: SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0))
@@ -108,6 +107,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         setupRecognizers()
         
         // 背景图设置
+        stopButton.titleLabel?.layer.opacity = 0
+        stopButton.backgroundColor = UIColor(red: 0, green: 0.8, blue: 0, alpha: 0.5)
+        stopButton.isHidden = true
+        recordButton.titleLabel?.layer.opacity = 0
         recordButton.imageView?.contentMode = .scaleAspectFit
         helpButton.imageView?.contentMode = .scaleAspectFit
         settingButton.imageView?.contentMode = .scaleAspectFit
@@ -115,7 +118,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
-        recordButton.setImage(UIImage(named: "find"), for: .disabled)
+        //recordButton.setImage(UIImage(named: "find"), for: .disabled)
         
         // Set the view's delegate
         sceneView.delegate = self
@@ -144,13 +147,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         rootLayer = sceneView.layer
         setupLayers()
         updateLayerGeometry()
-        print(rootLayer.bounds)
-        print(detectionOverlay.bounds)
-        
-        
-        // Tap Gesture Recognizer 点击操作识别器
-        //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
-        //        view.addGestureRecognizer(tapGesture)
         
         // 设置YOLO识别器
         // Vision classification request and model
@@ -206,6 +202,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         // stored in a local member variable.
         speechRecognizer.delegate = self
         
+        
         // Asynchronously make the authorization request.
         SFSpeechRecognizer.requestAuthorization { authStatus in
 
@@ -219,25 +216,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 case .denied:
                     self.recordButton.isEnabled = false
                     //self.recordButton.setTitle("User denied access to speech recognition", for: .disabled)
-                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
+                    //self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 case .restricted:
                     self.recordButton.isEnabled = false
                     //self.recordButton.setTitle("Speech recognition restricted on this device", for: .disabled)
-                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
+                    //self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 case .notDetermined:
                     self.recordButton.isEnabled = false
                     //self.recordButton.setTitle("Speech recognition not yet authorized", for: .disabled)
-                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
+                    //self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 default:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
+                    //self.recordButton.setImage(UIImage(named: "find"), for: .disabled)
                     
                 }
             }
         }
+        
+        // 开启引导
+        Speak("请缓慢移动手机，扫描周围环境")
         
     }
     
@@ -257,8 +257,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         self.recognitionTask = nil
         
         // Configure the audio session for the app.
-        // let audioSession = AVAudioSession.sharedInstance()
-        try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
+        try AVAudioSession.sharedInstance().setCategory(.record, mode: .measurement, options: .duckOthers)
         try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
         let inputNode = audioEngine.inputNode
 
@@ -271,6 +270,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         if #available(iOS 13, *) {
             recognitionRequest.requiresOnDeviceRecognition = false
         }
+        
+        //clean userCommand
+        userCommand = ""
         
         // Create a recognition task for the speech recognition session.
         // Keep a reference to the task so that it can be canceled.
@@ -295,7 +297,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
 
                 self.recordButton.isEnabled = true
                 //self.recordButton.setTitle("Start Recording", for: [])
-                self.recordButton.setImage(UIImage(named: "find"), for: .normal)
+                //self.recordButton.setImage(UIImage(named: "find"), for: .normal)
             }
         }
 
@@ -316,11 +318,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         if available {
             recordButton.isEnabled = true
             //recordButton.setTitle("Start Recording", for: [])
-            recordButton.setImage(UIImage(named: "find"), for: .normal)
+            //recordButton.setImage(UIImage(named: "find"), for: .normal)
         } else {
             recordButton.isEnabled = false
             //recordButton.setTitle("Recognition Not Available", for: .disabled)
-            recordButton.setImage(UIImage(named: "find"), for: .disabled)
+            //recordButton.setImage(UIImage(named: "find"), for: .disabled)
         }
     }
     
@@ -332,42 +334,72 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
             //recordButton.setTitle("Stopping", for: .disabled)
-            recordButton.setImage(UIImage(named: "find"), for: .disabled)
+            //recordButton.setImage(UIImage(named: "find"), for: .disabled)
+            
             
             // 把音频模式改回来
             do {
-                try AVAudioSession.sharedInstance().setCategory(.soloAmbient)
+                try AVAudioSession.sharedInstance().setCategory(.soloAmbient, mode: .default)
                 try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
             } catch {}
+            
+            recordButton.backgroundColor = UIColor(red: 0.8, green: 0, blue: 0, alpha: 0)
             
             
             // 调用关键词匹配
             let objectIndex = objectIsWanted(from: userCommand)
+            
             if objectIndex != -1 {
                 search(objectIndex)
             }
         } else {
             do {
                 Speak("你想找啥?")
+                
+                recordButton.backgroundColor = UIColor(red: 0.8, green: 0, blue: 0, alpha: 0.5)
+
                 try startRecording()
                 //recordButton.setTitle("Stop Recording", for: [])
-                recordButton.setImage(UIImage(named: "finding"), for: .normal)
+                //recordButton.setImage(UIImage(named: "finding"), for: .normal)
+                
             } catch {
                 //recordButton.setTitle("Recording Not Available", for: [])
-                recordButton.setImage(UIImage(named: "find"), for: .disabled)
+                //recordButton.setImage(UIImage(named: "find"), for: .disabled)
             }
         }
     }
     
+    
+    @IBAction func stopButtonTapped() {
+        
+        stopButton.isHidden = true
+        recordButton.isHidden = false
+        
+        // 移除声音
+        for node in nodes {
+            node.removeAllAudioPlayers()
+        }
+    }
+        
+        
+    // 让Siri说说话
+    func Speak(_ stringToSpeak: String){
+        let utterance = AVSpeechUtterance(string: stringToSpeak)
+        utterance.voice = AVSpeechSynthesisVoice(language: language)
+        let synthesizer = AVSpeechSynthesizer()
+        synthesizer.speak(utterance)
+        // print(stringToSpeak)
+        
+    }
+    
     @IBAction func addButtonTapped(){
-        Speak("Sorry. The function is under construction")
-        //                do {
-        //                     audioPlayer = try AVAudioPlayer(contentsOf: recordStartSound)
-        //                     audioPlayer.play()
-        //                } catch {
-        //                   // couldn't load file :(
-        //                }
-        //
+//        do {
+//            audioPlayer = try AVAudioPlayer(contentsOf: recordStopSound)
+//            audioPlayer.play()
+//        } catch {
+//            // couldn't load file :(
+//        }
+        Speak("更多功能，敬请期待")
     }
     
     // add form exsitingPlaneUsingExtent
@@ -387,11 +419,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     // Pass camera frames received from ARKit to Vision (when not already processing one)
     /// - Tag: ConsumeARFrames
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        
         // Do not enqueue other buffers for processing while another Vision task is still running.
         // The camera stream has only a finite amount of buffers available; holding too many buffers for analysis would starve the camera.
         guard pixbuff == nil, case .normal = frame.camera.trackingState else {
             return
         }
+        
+        // camere的尺寸
+        //print(frame.camera.imageResolution)
+        
         if runCoreML {
             updateCoreML()
         }
@@ -433,6 +470,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     func updateCoreML() {
         // Get Camera Image as RGB SCENEVIEW的图片就用当前帧的画面弄出来就行
         pixbuff  = sceneView.session.currentFrame?.capturedImage
+        
         
         // if pixbuff == nil { return }
         
@@ -478,7 +516,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     }
     
     
-    // MARK: - Point Control
+    // MARK: - Result
     
     func showOnMainThread(_ observations: [Any],_ elapsed: CFTimeInterval){
         //删除之前的sublayers
@@ -504,16 +542,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 }
                 
                 // 沙雕代码 2019.10.24
+                // 根据不同的旋转情况改boundingbox位置
                 let boundbox = CGRect(x: 1-objectObservation.boundingBox.maxY, y: objectObservation.boundingBox.minX, width: objectObservation.boundingBox.height, height: objectObservation.boundingBox.width)
+                
+                //let boundbox = objectObservation.boundingBox
+                //bufferSize = CGSize(width: sceneView.bounds.size.height, height: sceneView.bounds.size.width)
                 
                 let objectBounds = VNImageRectForNormalizedRect(boundbox, Int(bufferSize.width), Int(bufferSize.height))
                 
                 updatePredictions(objectBounds, Index: Index, confidence: topLabelObservation.confidence)
-                
-                if topLabelObservation.identifier == "mouse" {
-                    print(objectObservation.boundingBox)
-                    print(objectBounds)
-                }
                 
                 DispatchQueue.main.async {
                     self.updateUI(topLabelObservation)
@@ -522,19 +559,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                         self.updateLayer(topLabelObservation, objectBounds)
                     }
                 }
-                
             }
         }
-        
-        
     }
     
     
-    
+    // MARK: - Point Control
     
     func updatePredictions(_ rect: CGRect, Index: Int, confidence: VNConfidence){
         // 判断这个点和手机当前位置不能太近
-        guard getWorldCoord(rect).x != 0.0 else{
+        guard getWorldCoord(rect).x != 0 else{
             return
         }
         if let i = predictions.firstIndex(where: {$0.classIndex == Index}){
@@ -605,6 +639,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         return -1
     }
     
+    // MARK: - Search Object
+    
     func search(_ Index: Int){
         if let i = nodes.firstIndex(where: {$0.name == labelsList[Index].english}){
             // 存在这个node
@@ -612,10 +648,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             setUpAudio(labelsList[Index].english)
             nodes[i].removeAllAudioPlayers()
             nodes[i].addAudioPlayer(SCNAudioPlayer(source: audioSource))
+            
+            // 录音按钮隐藏，显示停止寻找按钮
+            recordButton.isHidden = true
+            stopButton.isHidden = false
+            
         } else{
             // 不存在这个node
-            Speak(String("没找到" + labelsList[Index].chinese.first!))
+            waitFor(Index)
         }
+    }
+    
+    func waitFor(_ Index: Int){
+        Speak(String("没找到" + labelsList[Index].chinese.first!))
+        // 增加wait
     }
     
     // MARK: - Audio
@@ -625,7 +671,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     private func setUpAudio(_ name: String) {
         
         // Instantiate the audio source
-        audioSource = SCNAudioSource(fileNamed: "default.mp3")
+        audioSource = SCNAudioSource(fileNamed: "fireplace.mp3")
         //audioSource = SCNAudioSource(fileNamed: "\(name).mp3")
         // As an environmental sound layer, audio should play indefinitely
         audioSource.loops = true
@@ -658,15 +704,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         return bubbleNode
     }
     
-    // 让Siri说说话
-    func Speak(_ stringToSpeak: String){
-        let utterance = AVSpeechUtterance(string: stringToSpeak)
-        utterance.voice = AVSpeechSynthesisVoice(language: language)
-        let synthesizer = AVSpeechSynthesizer()
-        synthesizer.speak(utterance)
-        // print(stringToSpeak)
-        
-    }
+
     
     
     
@@ -753,7 +791,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     func createTextSubLayerInBounds(_ bounds: CGRect, identifier: String, confidence: VNConfidence) -> CATextLayer {
         let textLayer = CATextLayer()
-        textLayer.name = "Object Label"
+        textLayer.name = identifier
         let formattedString = NSMutableAttributedString(string: String(format: "\(identifier)\n%.2f", confidence))
         let largeFont = UIFont(name: "Helvetica", size: 12.0)!
         formattedString.addAttributes([NSAttributedString.Key.font: largeFont], range: NSRange(location: 0, length: identifier.count))

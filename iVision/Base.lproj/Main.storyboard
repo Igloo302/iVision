@@ -26,13 +26,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0g-yA-FJe">
-                                <rect key="frame" x="86.5" y="467" width="202" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="sUH-CE-8dI"/>
-                                </constraints>
-                                <state key="normal" image="find"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
+                                <state key="normal" title="寻找物品"/>
                                 <connections>
                                     <action selector="recordButtonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ecv-d4-Qtj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ezh-Yl-uqa">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
+                                <state key="normal" title="停止"/>
+                                <connections>
+                                    <action selector="stopButtonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="wtY-q5-oAe"/>
                                 </connections>
                             </button>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kQO-AW-wEs">
@@ -127,17 +131,23 @@
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="d0g-yA-FJe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="CA1-M6-bmQ"/>
                             <constraint firstAttribute="trailing" secondItem="UQG-yk-ma9" secondAttribute="trailing" id="CXJ-ie-Kl6"/>
                             <constraint firstItem="Nnz-S6-2br" firstAttribute="top" secondItem="KJ5-0N-ly3" secondAttribute="bottom" id="DYI-gU-Kap"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="d0g-yA-FJe" secondAttribute="bottom" constant="100" id="Gbv-6e-sGw"/>
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="JRf-ya-Geq"/>
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="QD8-4n-bQQ"/>
                             <constraint firstItem="yF9-Ns-iGO" firstAttribute="trailing" secondItem="kQO-AW-wEs" secondAttribute="trailing" id="QNT-Us-tU3"/>
+                            <constraint firstItem="d0g-yA-FJe" firstAttribute="top" secondItem="KJ5-0N-ly3" secondAttribute="top" id="Wz7-R3-NAs"/>
+                            <constraint firstItem="Ezh-Yl-uqa" firstAttribute="top" secondItem="UQG-yk-ma9" secondAttribute="top" id="XWL-bd-iYb"/>
                             <constraint firstAttribute="trailing" secondItem="KJ5-0N-ly3" secondAttribute="trailing" id="Yva-BE-bf7"/>
+                            <constraint firstAttribute="trailing" secondItem="Ezh-Yl-uqa" secondAttribute="trailing" id="btc-D6-6QQ"/>
+                            <constraint firstItem="Ezh-Yl-uqa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="chv-Tj-xJB"/>
                             <constraint firstItem="kQO-AW-wEs" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="gnj-sY-4Sa"/>
                             <constraint firstItem="Nnz-S6-2br" firstAttribute="top" secondItem="UQG-yk-ma9" secondAttribute="bottom" id="h4i-KV-LrK"/>
+                            <constraint firstItem="d0g-yA-FJe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="i61-T1-A7t"/>
+                            <constraint firstAttribute="trailing" secondItem="d0g-yA-FJe" secondAttribute="trailing" id="i7z-ev-WXt"/>
+                            <constraint firstItem="Nnz-S6-2br" firstAttribute="top" secondItem="d0g-yA-FJe" secondAttribute="bottom" id="kVw-je-MyA"/>
                             <constraint firstItem="yF9-Ns-iGO" firstAttribute="top" secondItem="kQO-AW-wEs" secondAttribute="bottom" constant="20" id="mpN-ub-XiL"/>
+                            <constraint firstItem="Nnz-S6-2br" firstAttribute="top" secondItem="Ezh-Yl-uqa" secondAttribute="bottom" id="qqO-Dh-0UI"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Nnz-S6-2br" secondAttribute="bottom" id="rit-eK-OEa"/>
                             <constraint firstItem="Nnz-S6-2br" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sVN-5d-csv"/>
                             <constraint firstItem="UQG-yk-ma9" firstAttribute="trailing" secondItem="kQO-AW-wEs" secondAttribute="trailing" constant="20" id="ttv-10-pez"/>
@@ -153,12 +163,13 @@
                         <outlet property="recordButton" destination="d0g-yA-FJe" id="P0L-xO-xFo"/>
                         <outlet property="sceneView" destination="UQG-yk-ma9" id="NLk-K6-5FB"/>
                         <outlet property="settingButton" destination="HHr-3T-WOQ" id="hu7-Hz-dnt"/>
+                        <outlet property="stopButton" destination="Ezh-Yl-uqa" id="bSr-eq-LBA"/>
                         <outlet property="textView" destination="t6Y-Zg-d24" id="IJD-4a-qcG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="127.53623188405798" y="127.98913043478262"/>
+            <point key="canvasLocation" x="127.2" y="127.28635682158921"/>
         </scene>
         <!--Setting Table View Controller-->
         <scene sceneID="gwf-UY-mKx">
@@ -392,7 +403,6 @@
         <image name="arrowshape.turn.up.left.fill" catalog="system" width="64" height="52"/>
         <image name="bolt.circle" catalog="system" width="64" height="60"/>
         <image name="circle.grid.2x2" catalog="system" width="64" height="56"/>
-        <image name="find" width="202" height="202"/>
         <image name="flame" catalog="system" width="54" height="64"/>
         <image name="plus" catalog="system" width="64" height="56"/>
         <image name="questionmark.circle.fill" catalog="system" width="64" height="60"/>
