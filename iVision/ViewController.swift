@@ -16,7 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     // MARK: Properties
     let runARSession = true
-    var showLayer = false
+    var showLayer = true
     var showNode = true
     var runCoreML = true
     
@@ -31,6 +31,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     @IBOutlet weak var sceneView: ARSCNView!
     
     // 语音转录变量
+    let language = "zh-TW"
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))!
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
@@ -47,6 +48,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     var audioSource: SCNAudioSource!
     var cube = SCNNode(geometry: SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0))
+    
+    
     
     // Tweak these values to get more or fewer predictions.
     let confidenceThreshold: Float = 0.8
@@ -90,7 +93,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     var detectionOverlay: CALayer! = nil
     var rootLayer: CALayer! = nil
     
-    // 屏幕尺寸
+    // 显示区域尺寸
     var bufferSize: CGSize = .zero
     
     // COREML
@@ -101,6 +104,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupRecognizers()
         
         // 背景图设置
         recordButton.imageView?.contentMode = .scaleAspectFit
@@ -139,6 +144,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         rootLayer = sceneView.layer
         setupLayers()
         updateLayerGeometry()
+        print(rootLayer.bounds)
+        print(detectionOverlay.bounds)
+        
         
         // Tap Gesture Recognizer 点击操作识别器
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
@@ -340,7 +348,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             }
         } else {
             do {
-                Speak("what do you want?")
+                Speak("你想找啥?")
                 try startRecording()
                 //recordButton.setTitle("Stop Recording", for: [])
                 recordButton.setImage(UIImage(named: "finding"), for: .normal)
@@ -362,6 +370,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         //
     }
     
+    // add form exsitingPlaneUsingExtent
+    @objc func didTap(recognizer:UITapGestureRecognizer){
+        let tapPoint = recognizer.location(in: sceneView)
+        print(tapPoint)
+        
+    }
+    func setupRecognizers() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didTap(recognizer:) ))
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        sceneView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
     // MARK: - ARSessionDelegate
     
     // Pass camera frames received from ARKit to Vision (when not already processing one)
@@ -372,7 +392,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         guard pixbuff == nil, case .normal = frame.camera.trackingState else {
             return
         }
-        
         if runCoreML {
             updateCoreML()
         }
@@ -422,7 +441,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         // Prepare CoreML/Vision Request，VNImageRequestHandler是处理与单个图像有关的一个或多个图像分析请求的对象
         // Vision will automatically resize the input image.
-        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixbuff!, options: [:])
+        // 需要把画面时针旋转90度，但是我也不知道为什么🤷‍♂️
+        let exifOrientation = exifOrientationFromDeviceOrientation()
+        
+        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixbuff!, orientation: exifOrientation, options: [:])
         
         // Run Image Request
         visionQueue.async {
@@ -481,9 +503,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                     continue
                 }
                 
-                let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
+                // 沙雕代码 2019.10.24
+                let boundbox = CGRect(x: 1-objectObservation.boundingBox.maxY, y: objectObservation.boundingBox.minX, width: objectObservation.boundingBox.height, height: objectObservation.boundingBox.width)
+                
+                let objectBounds = VNImageRectForNormalizedRect(boundbox, Int(bufferSize.width), Int(bufferSize.height))
                 
                 updatePredictions(objectBounds, Index: Index, confidence: topLabelObservation.confidence)
+                
+                if topLabelObservation.identifier == "mouse" {
+                    print(objectObservation.boundingBox)
+                    print(objectBounds)
+                }
                 
                 DispatchQueue.main.async {
                     self.updateUI(topLabelObservation)
@@ -503,17 +533,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     
     func updatePredictions(_ rect: CGRect, Index: Int, confidence: VNConfidence){
+        // 判断这个点和手机当前位置不能太近
+        guard getWorldCoord(rect).x != 0.0 else{
+            return
+        }
         if let i = predictions.firstIndex(where: {$0.classIndex == Index}){
             // 如果已经存在，就更新这个prediction
-            predictions[i].score = 100 * confidence
-            predictions[i].rect = rect
-            predictions[i].worldCoord.append(getWorldCoord(rect))
-            // 移动node位置
-            if let j = nodes.firstIndex(where: {getClassIndex($0.name!) == Index}){
-                nodes[j].position = predictions[i].worldCoord.last!
-            }
-            
-            
+                predictions[i].score = 100 * confidence
+                predictions[i].rect = rect
+                predictions[i].worldCoord.append(getWorldCoord(rect))
+                // 移动node位置
+                if let j = nodes.firstIndex(where: {getClassIndex($0.name!) == Index}){
+                    nodes[j].position = predictions[i].worldCoord.last!
+                }
         }else{
             // 如果没有这个prediction，就创建新prediction
             let prediction = Prediction(classIndex: Index,
@@ -563,27 +595,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         for label in labelsList {
             for name in label.chinese {
                 if userCommand.contains(name){
-                    print("想找的是", name,label.english, getClassIndex(label.english))
+                    //print("想找的是", name,label.english, getClassIndex(label.english))
                     return getClassIndex(label.english)
                 }
             }
         }
         // 没有解析到关键词
-        Speak("I don‘t understand you")
+        Speak("对不起，我没听懂")
         return -1
     }
     
     func search(_ Index: Int){
-        let name = labelsList[Index].english
-        if let i = nodes.firstIndex(where: {$0.name == name}){
+        if let i = nodes.firstIndex(where: {$0.name == labelsList[Index].english}){
             // 存在这个node
-            Speak(String(name + " is here"))
-            setUpAudio(name)
+            Speak(String(labelsList[Index].chinese.first! + "在这儿"))
+            setUpAudio(labelsList[Index].english)
             nodes[i].removeAllAudioPlayers()
             nodes[i].addAudioPlayer(SCNAudioPlayer(source: audioSource))
         } else{
             // 不存在这个node
-            Speak(String("I don't find " + name))
+            Speak(String("没找到" + labelsList[Index].chinese.first!))
         }
     }
     
@@ -630,6 +661,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     // 让Siri说说话
     func Speak(_ stringToSpeak: String){
         let utterance = AVSpeechUtterance(string: stringToSpeak)
+        utterance.voice = AVSpeechSynthesisVoice(language: language)
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
         // print(stringToSpeak)
@@ -698,11 +730,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     }
     
     func updateLayerGeometry() {
-        let bounds = rootLayer.bounds
         var scale: CGFloat
         
-        let xScale: CGFloat = bounds.size.width / bufferSize.height
-        let yScale: CGFloat = bounds.size.height / bufferSize.width
+        let xScale: CGFloat = rootLayer.bounds.size.width / bufferSize.height
+        let yScale: CGFloat = rootLayer.bounds.size.height / bufferSize.width
         
         scale = fmax(xScale, yScale)
         if scale.isInfinite {
@@ -714,7 +745,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         // rotate the layer into screen orientation and scale and mirror
         detectionOverlay.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: scale, y: -scale))
         // center the layer
-        detectionOverlay.position = CGPoint (x: bounds.midX, y: bounds.midY)
+        detectionOverlay.position = CGPoint (x: rootLayer.bounds.midX, y: rootLayer.bounds.midY)
         
         //        CATransaction.commit()
         
@@ -748,7 +779,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         return shapeLayer
     }
     
-    
+    func exifOrientationFromDeviceOrientation() -> CGImagePropertyOrientation {
+        let curDeviceOrientation = UIDevice.current.orientation
+        let exifOrientation: CGImagePropertyOrientation
+        
+        switch curDeviceOrientation {
+        case UIDeviceOrientation.portraitUpsideDown:  // Device oriented vertically, home button on the top
+            exifOrientation = .left
+        case UIDeviceOrientation.landscapeLeft:       // Device oriented horizontally, home button on the right
+            exifOrientation = .up
+        case UIDeviceOrientation.landscapeRight:      // Device oriented horizontally, home button on the left
+            exifOrientation = .down
+        case UIDeviceOrientation.portrait:            // Device oriented vertically, home button on the bottom
+            exifOrientation = .right
+        default:
+            exifOrientation = .right
+        }
+        return exifOrientation
+    }
 }
 
 extension UIFont {
