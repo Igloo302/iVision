@@ -39,7 +39,7 @@
                                     <action selector="stopButtonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="wtY-q5-oAe"/>
                                 </connections>
                             </button>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kQO-AW-wEs">
+                            <visualEffectView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kQO-AW-wEs">
                                 <rect key="frame" x="378" y="100" width="16" height="16"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Jhv-Vh-2yS">
                                     <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>

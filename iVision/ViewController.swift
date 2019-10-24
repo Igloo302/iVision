@@ -12,11 +12,14 @@ import Speech
 import SceneKit
 import ARKit
 
+
+
+
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SFSpeechRecognizerDelegate {
     
     // MARK: Properties
     let runARSession = true
-    var showLayer = true
+    var showLayer = false
     var showNode = true
     var runCoreML = true
     
@@ -54,6 +57,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     let confidenceThreshold: Float = 0.8
     let iouThreshold: Float = 0.5
     
+    let distanceThreshold: Float = 0.4
+    
     // 识别的物体
     struct Prediction {
         var classIndex: Int
@@ -70,10 +75,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         let english:String
     }
     
+    let helpText = "还需要我教你怎么用吗？"
+    
     // 识别到的物体的字典
     let labelsList = [object(chinese: ["显示器","液晶屏"], english: "tvmonitor"),
                      object(chinese: ["椅子","凳子"], english: "chair"),
-                     object(chinese: ["盆栽","盆景"], english: "pottedplant"),
+                     object(chinese: ["盆栽","盆景","花盆","植物"], english: "pottedplant"),
                      object(chinese: ["瓶子"], english: "bottle"),
                      object(chinese: ["水杯","瓶子","杯子"], english: "cup"),
                      object(chinese: ["香蕉"], english: "banana"),
@@ -88,6 +95,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     //追踪模式
     var trackingNodeState = false
     var trackingNodeID:Int = 0
+    
+    //探索模式
+    var exploreNodeState = false
+    var exploreNodeIndex:Int = 0
     
     //计时器
     var startTimes: [CFTimeInterval] = []
@@ -259,7 +270,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         self.recognitionTask = nil
         
         // Configure the audio session for the app.
-        try AVAudioSession.sharedInstance().setCategory(.record, mode: .measurement, options: .duckOthers)
+        try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
         try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
         let inputNode = audioEngine.inputNode
 
@@ -376,11 +387,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         stopButton.isHidden = true
         recordButton.isHidden = false
-        trackingNodeState = false
         
-        // 移除声音
-        for node in nodes {
-            node.removeAllAudioPlayers()
+        if exploreNodeState {
+            exploreNodeState = false
+            Speak("很抱歉没有找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，下次再来找我吧")
+        }else{
+            trackingNodeState = false
+            nodes[trackingNodeID].removeAllAudioPlayers()
         }
     }
         
@@ -476,9 +489,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         // 追踪状态
         if trackingNodeState {
             let distance = distanceBetween(sceneView.pointOfView!.position, nodes[trackingNodeID].position)
-            //print(distance)
             
-            if distance < 0.4 {
+            if distance < distanceThreshold {
                 Speak("就在你手边啦")
                 // 把音频速度调快
                 guard let player = nodes[trackingNodeID].audioPlayers.first,
@@ -615,12 +627,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             // print("Add New Node")
             let node = createNewBubbleParentNode(labelsList[Index].english)
 
-            
             node.position = prediction.worldCoord.last!
             node.name = labelsList[Index].english
             nodes.append(node)
             if showNode{
                 sceneView.scene.rootNode.addChildNode(node)
+            }
+            
+            if exploreNodeState {
+                if Index == exploreNodeIndex {
+                    // 关闭探索模式
+                    exploreNodeState = false
+                    // 开始追踪流程
+                    search(Index)
+                }
             }
         }
     }
@@ -657,6 +677,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 }
             }
         }
+        // egg
+        
+        if userCommand.contains("主人"){
+            Speak("妲己会永远爱主人，因为被设定成这样")
+            return -1
+        }
+        
+        
+        if userCommand.contains("帮助"){
+            Speak(helpText)
+            return -1
+        }
+        
         // 没有解析到关键词
         Speak("对不起，我没听懂")
         return -1
@@ -667,9 +700,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     func search(_ Index: Int){
         if let i = nodes.firstIndex(where: {$0.name == labelsList[Index].english}){
             // 存在这个node
+            // 播报距离
             let distance = distanceBetween(sceneView.pointOfView!.position, nodes[i].position)
+            if distance > distanceThreshold {
+                Speak(String(format: labelsList[Index].chinese.first! + "在距离你%.1f 米处", distance))
+            }
             
-            Speak(String(format: labelsList[Index].chinese.first! + "在距离你%.1f 米处", distance))
             
             // 播放node上的声音
             setUpAudio(labelsList[Index].english)
@@ -679,6 +715,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             // 录音按钮隐藏，显示停止寻找按钮
             recordButton.isHidden = true
             stopButton.isHidden = false
+            stopButton.setTitle("停止追踪", for: .normal)
             
             // 开启追踪模式
             trackingNodeState = true
@@ -688,14 +725,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         } else{
             // 不存在这个node
             exploreFor(Index)
+            
+            // 录音按钮隐藏，显示停止寻找按钮
+            recordButton.isHidden = true
+            stopButton.isHidden = false
+            stopButton.setTitle("停止寻找", for: .normal)
+            
+            // 开启探索模式
+            exploreNodeState = true
+            exploreNodeIndex = Index
+            print("进入追踪模式")
+            //Speak("当前视野未找到\(labelsList[self.exploreNodeIndex].chinese.first!)，请换个位置试试")
+            exlopreFail()
+
         }
     }
     
-    // 进入寻找模式
-    func OnTracking(_ node: SCNNode){
-
+    func exlopreFail(){
+        // 延迟执行播报提示
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+            if self.exploreNodeState == true {
+                self.Speak("当前视野未找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，请换个位置试试")
+                self.exlopreFail()
+            }
+        }
     }
     
+    // 测算距离
     func distanceBetween(_ position1:SCNVector3,_ position2:SCNVector3) -> Float{
         return GLKVector3Distance(SCNVector3ToGLKVector3(position1), SCNVector3ToGLKVector3(position2))
     }

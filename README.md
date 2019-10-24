@@ -1,4 +1,20 @@
+Todo List
+
+1. 不同设备的屏幕适配
+2. Node二次播放问题- 有解决方案
+3. TTS通道堵塞
+4. 屏幕旋转
+5. AR识别过滤低质量结果
+6. 颜色呼吸效果
+
+
+
+
+
+
+
 # iVision
+
 An assistive system for the blind based on augmented reality and machine learning
 
 ## SYSTEM DESIGN
