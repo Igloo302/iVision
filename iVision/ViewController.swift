@@ -89,6 +89,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                      object(chinese: ["包"], english: "bag"),
                      object(chinese: ["鼠标"], english: "mouse"),
                      object(chinese: ["键盘"], english: "keyboard"),
+                     object(chinese: ["笔记本电脑"], english: "laptop"),
+                     object(chinese: ["橘"], english: "orange"),
+                     object(chinese: ["床"], english: "bed"),
                      object(chinese: ["手机"], english: "cell phone")
     ]
     
@@ -390,7 +393,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         if exploreNodeState {
             exploreNodeState = false
-            Speak("很抱歉没有找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，下次再来找我吧")
+            Speak("很抱歉没有帮你找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，下次再来找我吧")
         }else{
             trackingNodeState = false
             nodes[trackingNodeID].removeAllAudioPlayers()
@@ -571,7 +574,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 
                 // 判断一下这个物体是不是在列表中的
                 let Index = getClassIndex(topLabelObservation.identifier)
-                if Index == -1{
+                if Index == -1 {
+                    print(topLabelObservation.identifier)
                     continue
                 }
                 
@@ -681,6 +685,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         if userCommand.contains("主人"){
             Speak("妲己会永远爱主人，因为被设定成这样")
+            return -1
+        }
+        
+        if userCommand.contains("情敌"){
+            Speak("情敌是大家的情敌")
             return -1
         }
         
