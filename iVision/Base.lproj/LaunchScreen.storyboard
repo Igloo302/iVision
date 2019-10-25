@@ -18,18 +18,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Breakfast Finder Logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="7Ak-Ii-d02">
-                                <rect key="frame" x="0.0" y="91" width="375" height="485"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="7Ak-Ii-d02">
+                                <rect key="frame" x="66" y="176.5" width="243" height="314"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="7Ak-Ii-d02" secondAttribute="height" multiplier="75:97" id="8xu-jm-Qe8"/>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.54098161324305927" blue="0.14265156628468834" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="7Ak-Ii-d02" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="A49-XE-OiJ"/>
+                            <constraint firstItem="7Ak-Ii-d02" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="50" id="Djy-Kz-sXr"/>
                             <constraint firstItem="7Ak-Ii-d02" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Ji7-6r-Kkb"/>
-                            <constraint firstAttribute="trailing" secondItem="7Ak-Ii-d02" secondAttribute="trailing" id="V4E-A9-URb"/>
+                            <constraint firstItem="7Ak-Ii-d02" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="fhJ-Px-80V"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -39,6 +40,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Breakfast Finder Logo.png" width="612" height="792"/>
+        <image name="logo" width="294" height="377"/>
     </resources>
 </document>

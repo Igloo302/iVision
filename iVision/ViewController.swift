@@ -130,9 +130,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         stopButton.isHidden = true
         recordButton.titleLabel?.layer.opacity = 0
         recordButton.imageView?.contentMode = .scaleAspectFit
+        recordButton.accessibilityLabel = "开始寻找"
+        //recordButton.accessibilityHint = "点击屏幕上任何位置都可以开始语音输入，请清晰说出你要找的东西的名字"
         helpButton.imageView?.contentMode = .scaleAspectFit
+        helpButton.accessibilityLabel = "帮助"
+        helpButton.accessibilityHint = "点击这个按钮可以查看帮助"
         settingButton.imageView?.contentMode = .scaleAspectFit
+        settingButton.accessibilityLabel = "选项"
+        settingButton.accessibilityHint = "点击这个按钮可以设置iVision"
         addButton.imageView?.contentMode = .scaleAspectFit
+        settingButton.accessibilityLabel = "录入"
+        settingButton.accessibilityHint = "点击这个按钮可以录入自定义物品"
         
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
@@ -405,6 +413,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     func Speak(_ stringToSpeak: String){
         let utterance = AVSpeechUtterance(string: stringToSpeak)
         utterance.voice = AVSpeechSynthesisVoice(language: language)
+        //utterance.rate = 0.7
+        utterance.postUtteranceDelay = 0.8
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
         // print(stringToSpeak)
@@ -418,7 +428,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
 //        } catch {
 //            // couldn't load file :(
 //        }
-        Speak("更多功能，敬请期待")
+        //Speak("更多功能，敬请期待")
+        Speak("盆栽在您三点钟方向，约两米处。当前视野未找到盆栽，请换个位置试试。很抱歉没有帮你找到盆栽，下次再来找我吧。请缓慢移动手机，扫描周围环境。")
     }
     
     // add form exsitingPlaneUsingExtent

@@ -103,7 +103,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1bB-hp-lSh">
                                         <rect key="frame" x="246.5" y="5" width="108.5" height="40"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" image="自定义功能"/>
+                                        <state key="normal" image="录入"/>
                                         <connections>
                                             <action selector="addButtonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="mqV-BF-px1"/>
                                         </connections>
@@ -261,7 +261,7 @@
                                 <rect key="frame" x="0.0" y="302.5" width="375" height="44.5"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="功能设置" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FCf-wF-RVK">
-                                <rect key="frame" x="28" y="275.5" width="58" height="17"/>
+                                <rect key="frame" x="28" y="275.5" width="57.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -348,8 +348,8 @@
         <image name="Siri唤醒" width="382" height="44.5"/>
         <image name="寻路导航" width="382" height="44.5"/>
         <image name="帮助" width="16" height="16"/>
+        <image name="录入" width="16" height="16"/>
         <image name="物品描述" width="382" height="44.5"/>
-        <image name="自定义功能" width="16" height="16"/>
         <image name="语音播报" width="382" height="44.5"/>
         <image name="返回" width="16" height="16"/>
         <image name="选项" width="16" height="16"/>
