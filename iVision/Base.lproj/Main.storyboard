@@ -67,7 +67,6 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t6Y-Zg-d24">
-                                            <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -295,9 +294,6 @@
                                     <action selector="close" destination="xJz-VR-9R6" eventType="touchUpInside" id="hj2-bN-ger"/>
                                 </connections>
                             </button>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ZgA-UP-rlZ">
-                                <rect key="frame" x="68" y="173.5" width="576" height="31"/>
-                            </slider>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -305,7 +301,6 @@
                             <constraint firstItem="rQD-42-vOA" firstAttribute="centerX" secondItem="XYn-ny-dVi" secondAttribute="centerX" id="6CW-LQ-cFl"/>
                             <constraint firstItem="9Rc-m4-JrB" firstAttribute="centerX" secondItem="XYn-ny-dVi" secondAttribute="centerX" id="6ny-dC-mUW"/>
                             <constraint firstAttribute="trailing" secondItem="Bbs-CV-hqi" secondAttribute="trailing" id="Aue-IO-nmW"/>
-                            <constraint firstItem="ZgA-UP-rlZ" firstAttribute="leading" secondItem="XYn-ny-dVi" secondAttribute="leadingMargin" constant="50" id="Bci-dZ-O9B"/>
                             <constraint firstItem="vXx-1L-9cU" firstAttribute="trailing" secondItem="XYn-ny-dVi" secondAttribute="trailingMargin" constant="-10" id="Dc3-Gb-Ajq"/>
                             <constraint firstItem="tZL-nh-iwy" firstAttribute="centerX" secondItem="XYn-ny-dVi" secondAttribute="centerX" id="E4R-0q-aaP"/>
                             <constraint firstItem="Sm0-Rj-ASe" firstAttribute="leading" secondItem="XYn-ny-dVi" secondAttribute="leading" id="F6f-Wb-M1t"/>
@@ -326,10 +321,8 @@
                             <constraint firstItem="clV-pL-oLl" firstAttribute="leading" secondItem="XYn-ny-dVi" secondAttribute="leading" id="ejy-uA-nxz"/>
                             <constraint firstItem="clV-pL-oLl" firstAttribute="top" secondItem="Sm0-Rj-ASe" secondAttribute="bottom" id="hli-mF-Pua"/>
                             <constraint firstItem="zND-uE-4mO" firstAttribute="centerX" secondItem="XYn-ny-dVi" secondAttribute="centerX" id="hyg-et-DHb"/>
-                            <constraint firstItem="ZgA-UP-rlZ" firstAttribute="centerX" secondItem="zND-uE-4mO" secondAttribute="centerX" id="imx-Bt-9ZQ"/>
                             <constraint firstItem="Bbs-CV-hqi" firstAttribute="leading" secondItem="XYn-ny-dVi" secondAttribute="leading" id="kbA-Sz-vIw"/>
                             <constraint firstItem="zND-uE-4mO" firstAttribute="top" secondItem="mGx-RT-I1R" secondAttribute="bottom" id="lj7-5w-eA3"/>
-                            <constraint firstItem="ZgA-UP-rlZ" firstAttribute="centerY" secondItem="zND-uE-4mO" secondAttribute="centerY" id="pVa-3K-qol"/>
                             <constraint firstItem="clV-pL-oLl" firstAttribute="centerX" secondItem="XYn-ny-dVi" secondAttribute="centerX" id="qyV-Ag-aox"/>
                             <constraint firstItem="zND-uE-4mO" firstAttribute="leading" secondItem="XYn-ny-dVi" secondAttribute="leading" id="rKD-re-enf"/>
                             <constraint firstItem="Sm0-Rj-ASe" firstAttribute="centerX" secondItem="XYn-ny-dVi" secondAttribute="centerX" id="sYs-dK-STT"/>

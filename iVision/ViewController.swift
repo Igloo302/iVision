@@ -429,7 +429,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
 //            // couldn't load file :(
 //        }
         //Speak("更多功能，敬请期待")
-        Speak("盆栽在您三点钟方向，约两米处。当前视野未找到盆栽，请换个位置试试。很抱歉没有帮你找到盆栽，下次再来找我吧。请缓慢移动手机，扫描周围环境。")
+        Speak("更多功能，敬请期待")
     }
     
     // add form exsitingPlaneUsingExtent
