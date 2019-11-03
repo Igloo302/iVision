@@ -9,13 +9,12 @@
 /* Begin PBXBuildFile section */
 		03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0B235CAFF50089C4EA /* btn_recordStop.wav */; };
 		03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 03089F0C235CAFF50089C4EA /* btn_recordStart.wav */; };
+		0311591A236EFD2200CCE474 /* default.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 03115919236EFD2200CCE474 /* default.mp3 */; };
 		0353365E2362083F00C0CD02 /* cup.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0353365D2362083E00C0CD02 /* cup.mp3 */; };
 		03533662236209E200C0CD02 /* mouse.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 03533661236209E200C0CD02 /* mouse.mp3 */; };
-		03533664236209EC00C0CD02 /* default.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 03533663236209EC00C0CD02 /* default.mp3 */; };
 		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
 		03C4F605235E00AF00862597 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C4F604235E00AF00862597 /* HelpViewController.swift */; };
 		8DEBA931235E9C3400780699 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
-		C4D150842363DC4400E98D13 /* default-single.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C4D150832363DC4400E98D13 /* default-single.mp3 */; };
 		C4F9AC9423635A4800618808 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F9AC9323635A4800618808 /* OptionsViewController.swift */; };
 		FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */; };
 		FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD5009E1ED668B60074D713 /* AppDelegate.swift */; };
@@ -28,17 +27,16 @@
 /* Begin PBXFileReference section */
 		03089F0B235CAFF50089C4EA /* btn_recordStop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStop.wav; sourceTree = "<group>"; };
 		03089F0C235CAFF50089C4EA /* btn_recordStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStart.wav; sourceTree = "<group>"; };
+		03115919236EFD2200CCE474 /* default.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = default.mp3; sourceTree = "<group>"; };
 		032557EF2349B902004A44C7 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
 		032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3Tiny.mlmodel; sourceTree = "<group>"; };
 		0353365D2362083E00C0CD02 /* cup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = cup.mp3; sourceTree = "<group>"; };
 		03533661236209E200C0CD02 /* mouse.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = mouse.mp3; sourceTree = "<group>"; };
-		03533663236209EC00C0CD02 /* default.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = default.mp3; sourceTree = "<group>"; };
 		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
 		03C4F604235E00AF00862597 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		B9491870B9491B3000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		B972A080B9729F9000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		C2A2AB60C2A2AB2000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		C4D150832363DC4400E98D13 /* default-single.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "default-single.mp3"; path = "../../../default-single.mp3"; sourceTree = "<group>"; };
 		C4F9AC9323635A4800618808 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Breakfast Finder Logo.png"; sourceTree = SOURCE_ROOT; };
 		FAD5009B1ED668B60074D713 /* iVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,11 +63,10 @@
 			isa = PBXGroup;
 			children = (
 				03089F0C235CAFF50089C4EA /* btn_recordStart.wav */,
-				C4D150832363DC4400E98D13 /* default-single.mp3 */,
 				03089F0B235CAFF50089C4EA /* btn_recordStop.wav */,
 				03533661236209E200C0CD02 /* mouse.mp3 */,
 				0353365D2362083E00C0CD02 /* cup.mp3 */,
-				03533663236209EC00C0CD02 /* default.mp3 */,
+				03115919236EFD2200CCE474 /* default.mp3 */,
 				039DC1B4235C494500C5E7E7 /* fireplace.mp3 */,
 			);
 			path = Resources;
@@ -195,8 +192,7 @@
 				03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */,
 				039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */,
 				FAD500A61ED668B60074D713 /* Assets.xcassets in Resources */,
-				C4D150842363DC4400E98D13 /* default-single.mp3 in Resources */,
-				03533664236209EC00C0CD02 /* default.mp3 in Resources */,
+				0311591A236EFD2200CCE474 /* default.mp3 in Resources */,
 				FAD500A41ED668B60074D713 /* Main.storyboard in Resources */,
 				03533662236209E200C0CD02 /* mouse.mp3 in Resources */,
 				03089F0E235CAFF60089C4EA /* btn_recordStart.wav in Resources */,
