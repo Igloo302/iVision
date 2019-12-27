@@ -791,7 +791,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     private func setUpAudio(_ name: String) {
         
         // Instantiate the audio source
-        audioSource = SCNAudioSource(fileNamed: "default-single.mp3")
+        audioSource = SCNAudioSource(fileNamed: "default.mp3")
         //audioSource = SCNAudioSource(fileNamed: "\(name).mp3")
         // As an environmental sound layer, audio should play indefinitely
         audioSource.loops = true
