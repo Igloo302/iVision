@@ -16,7 +16,6 @@
 		03C4F605235E00AF00862597 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C4F604235E00AF00862597 /* HelpViewController.swift */; };
 		8DEBA931235E9C3400780699 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
 		C4F9AC9423635A4800618808 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F9AC9323635A4800618808 /* OptionsViewController.swift */; };
-		FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */; };
 		FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD5009E1ED668B60074D713 /* AppDelegate.swift */; };
 		FAD500A11ED668B60074D713 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD500A01ED668B60074D713 /* ViewController.swift */; };
 		FAD500A41ED668B60074D713 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD500A21ED668B60074D713 /* Main.storyboard */; };
@@ -38,7 +37,6 @@
 		B972A080B9729F9000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		C2A2AB60C2A2AB2000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C4F9AC9323635A4800618808 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
-		FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Breakfast Finder Logo.png"; sourceTree = SOURCE_ROOT; };
 		FAD5009B1ED668B60074D713 /* iVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD5009E1ED668B60074D713 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAD500A01ED668B60074D713 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -120,7 +118,6 @@
 				FAD500A71ED668B60074D713 /* LaunchScreen.storyboard */,
 				032557EF2349B902004A44C7 /* YOLOv3.mlmodel */,
 				032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */,
-				FA4750C920BF3F48003E19ED /* Breakfast Finder Logo.png */,
 				FAD500AA1ED668B60074D713 /* Info.plist */,
 			);
 			path = iVision;
@@ -186,7 +183,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA4750CA20BF3F48003E19ED /* Breakfast Finder Logo.png in Resources */,
 				FAD500A91ED668B60074D713 /* LaunchScreen.storyboard in Resources */,
 				0353365E2362083F00C0CD02 /* cup.mp3 in Resources */,
 				03089F0D235CAFF60089C4EA /* btn_recordStop.wav in Resources */,

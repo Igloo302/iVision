@@ -1,19 +1,3 @@
-Todo List
-
-1. 不同设备的屏幕适配
-2. Node二次播放问题
-3. TTS通道堵塞
-4. 屏幕旋转
-5. AR识别过滤低质量结果
-6. 颜色呼吸效果
-7.更多功能的实现
-
-
-
-
-
-
-
 # iVision
 
 An assistive system for the blind based on augmented reality and machine learning
@@ -28,3 +12,14 @@ iVision’s prototype is developed on iPhone and iOS platform, using Vision, Cor
 4. Because blind people use touch screens with low efficiency, the system uses voice interfaces to build interactive processes. The speech-based interface combines real-time object detection model and augmented reality, into an interactive speech-based positioning and navigation device.
 
 The picture shows the process by which the iVision app recognizes the mouse, keyboard, smartphone and marks its spatial location.
+
+## Todo List
+
+1. 不同设备的屏幕适配
+2. Node二次播放问题
+3. TTS通道堵塞
+4. 屏幕旋转
+5. AR识别过滤低质量结果
+6. 颜色呼吸效果
+   7.更多功能的实现
+

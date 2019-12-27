@@ -2,7 +2,7 @@
  See LICENSE folder for this sample’s licensing information.
  
  Abstract:
- Contains the view controller for the Breakfast Finder.
+ Contains the view controller for the iVision.
  */
 
 import UIKit
@@ -262,6 +262,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         // 开启引导
         Speak("请缓慢移动手机，扫描周围环境")
+        textView.text = "请缓慢移动手机，扫描周围环境"
         
     }
     
@@ -506,6 +507,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             
             if distance < distanceThreshold {
                 Speak("就在你手边啦")
+                textView.text = "就在你手边啦"
                 // 把音频速度调快
                 guard let player = nodes[trackingNodeID].audioPlayers.first,
                     let avNode = player.audioNode as? AVAudioMixing else {
@@ -592,7 +594,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 
                 // 沙雕代码 2019.10.24
                 // 根据不同的旋转情况改boundingbox位置
-                let boundbox = CGRect(x: 1-objectObservation.boundingBox.maxY, y: objectObservation.boundingBox.minX, width: objectObservation.boundingBox.height, height: objectObservation.boundingBox.width)
+                var boundbox = CGRect(x: 0, y: 0, width: 0, height: 0)
+                // if UIDevice.current.orientation == UIDeviceOrientation.portrait
+                if true {
+                    boundbox = CGRect(x: 1-objectObservation.boundingBox.maxY, y: objectObservation.boundingBox.minX, width: objectObservation.boundingBox.height, height: objectObservation.boundingBox.width)
+                }
                 
                 //let boundbox = objectObservation.boundingBox
                 //bufferSize = CGSize(width: sceneView.bounds.size.height, height: sceneView.bounds.size.width)
@@ -654,6 +660,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                     // 关闭探索模式
                     exploreNodeState = false
                     // 开始追踪流程
+                    textView.text = "正在追踪"
                     search(Index)
                 }
             }
@@ -741,6 +748,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             trackingNodeState = true
             trackingNodeID = i
             print("进入追踪模式")
+            textView.text = "进入追踪模式"
             
         } else{
             // 不存在这个node
@@ -754,7 +762,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             // 开启探索模式
             exploreNodeState = true
             exploreNodeIndex = Index
-            print("进入追踪模式")
+            print("进入探索模式")
+            textView.text = "进入探索模式"
             //Speak("当前视野未找到\(labelsList[self.exploreNodeIndex].chinese.first!)，请换个位置试试")
             exlopreFail()
 
