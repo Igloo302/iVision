@@ -27,17 +27,15 @@
 		03089F0B235CAFF50089C4EA /* btn_recordStop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStop.wav; sourceTree = "<group>"; };
 		03089F0C235CAFF50089C4EA /* btn_recordStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = btn_recordStart.wav; sourceTree = "<group>"; };
 		03115919236EFD2200CCE474 /* default.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = default.mp3; sourceTree = "<group>"; };
-		032557EF2349B902004A44C7 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
 		032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3Tiny.mlmodel; sourceTree = "<group>"; };
 		0353365D2362083E00C0CD02 /* cup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = cup.mp3; sourceTree = "<group>"; };
 		03533661236209E200C0CD02 /* mouse.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = mouse.mp3; sourceTree = "<group>"; };
 		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
+		03B5384D24626CEB0045A8AB /* iVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C4F604235E00AF00862597 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
-		B9491870B9491B3000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		B972A080B9729F9000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		C2A2AB60C2A2AB2000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C4F9AC9323635A4800618808 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
-		FAD5009B1ED668B60074D713 /* iVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD5009E1ED668B60074D713 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAD500A01ED668B60074D713 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		FAD500A31ED668B60074D713 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -70,14 +68,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		B94912A0B949159000000001 /* LICENSE */ = {
-			isa = PBXGroup;
-			children = (
-				B9491870B9491B3000000001 /* LICENSE.txt */,
-			);
-			path = LICENSE;
-			sourceTree = "<group>";
-		};
 		B9727590B972755000000001 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,18 +81,9 @@
 			children = (
 				C2A2AB60C2A2AB2000000001 /* README.md */,
 				FAD5009D1ED668B60074D713 /* iVision */,
-				FAD5009C1ED668B60074D713 /* Products */,
 				B9727590B972755000000001 /* Configuration */,
-				B94912A0B949159000000001 /* LICENSE */,
+				03B5384D24626CEB0045A8AB /* iVision.app */,
 			);
-			sourceTree = "<group>";
-		};
-		FAD5009C1ED668B60074D713 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FAD5009B1ED668B60074D713 /* iVision.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		FAD5009D1ED668B60074D713 /* iVision */ = {
@@ -116,7 +97,6 @@
 				03C4F604235E00AF00862597 /* HelpViewController.swift */,
 				FAD500A51ED668B60074D713 /* Assets.xcassets */,
 				FAD500A71ED668B60074D713 /* LaunchScreen.storyboard */,
-				032557EF2349B902004A44C7 /* YOLOv3.mlmodel */,
 				032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */,
 				FAD500AA1ED668B60074D713 /* Info.plist */,
 			);
@@ -140,7 +120,7 @@
 			);
 			name = iVision;
 			productName = "VisionCamObjectRecognition-Swift";
-			productReference = FAD5009B1ED668B60074D713 /* iVision.app */;
+			productReference = 03B5384D24626CEB0045A8AB /* iVision.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -169,7 +149,7 @@
 				Base,
 			);
 			mainGroup = FAD500921ED668B60074D713;
-			productRefGroup = FAD5009C1ED668B60074D713 /* Products */;
+			productRefGroup = FAD500921ED668B60074D713;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -358,7 +338,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 86TWYCWZ65;
+				DEVELOPMENT_TEAM = A54HUL5VQN;
 				INFOPLIST_FILE = "$(SRCROOT)/iVision/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -378,7 +358,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 86TWYCWZ65;
+				DEVELOPMENT_TEAM = A54HUL5VQN;
 				INFOPLIST_FILE = "$(SRCROOT)/iVision/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
