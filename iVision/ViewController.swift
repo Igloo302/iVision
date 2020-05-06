@@ -517,7 +517,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 avNode.rate = 2
                 
                 // 震动
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+                // AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
                 
                 trackingNodeState = false
