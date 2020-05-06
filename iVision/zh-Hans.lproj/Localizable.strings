@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  iVision
+
+  Created by Igloo on 2020/5/6.
+  Copyright © 2020 Apple. All rights reserved.
+*/
+
+"TTSLanguage" = "zh-TW";
+"ASRLanguage" = "zh-CN";
+
+"More" = "更多功能，敬请期待";
+"ScanGuide" = "请缓慢移动手机，扫描周围环境";
+"WhatUWant" = "你想找啥";
+"Near" = "就在你手边啦";
+"failNLU" = "对不起，我没听懂";
+
+helpText = "还需要我教你怎么用吗？";

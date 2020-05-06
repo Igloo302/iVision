@@ -8,8 +8,8 @@
 /* Class = "UILabel"; text = "功能设置"; ObjectID = "FCf-wF-RVK"; */
 "FCf-wF-RVK.text" = "功能设置";
 
-/* Class = "UITextView"; text = "iVision is an auxiliary app designed for people with visual impairments. With this app, you can easily find the items you want to find.\n\nYou can click anywhere on the screen and enter the name of the item you want to find through voice interaction."; ObjectID = "IGX-vh-yCb"; */
-"IGX-vh-yCb.text" = "iVision is an auxiliary app designed for people with visual impairments. With this app, you can easily find the items you want to find.\n\nYou can click anywhere on the screen and enter the name of the item you want to find through voice interaction.";
+/* Class = "UITextView"; text = "iVision是一款专为视力缺陷人群设计的辅助类App，利用这款App您可以轻松地找到想要寻找的物品，甚至录入特定的物品。\n\n您可以点击“寻找物品”按钮，通过语音输入你想要找的物品名称。"; ObjectID = "IGX-vh-yCb"; */
+"IGX-vh-yCb.text" = "iVision是一款专为视力缺陷人群设计的辅助类App，利用这款App您可以轻松地找到想要寻找的物品。\n\n您可以在屏幕上任意点击，通过语音交互输入你想要找的物品名称。";
 
 /* Class = "UILabel"; text = "声音设置"; ObjectID = "NH7-qO-RWe"; */
 "NH7-qO-RWe.text" = "声音设置";

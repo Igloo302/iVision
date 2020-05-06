@@ -37,8 +37,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     @IBOutlet weak var sceneView: ARSCNView!
     
     // 语音转录变量
-    let language = "zh-TW"
-    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))!
+    // let language = "zh-TW"
+    let language = NSLocalizedString("TTSLanguage", comment: "")
+    
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: NSLocalizedString("ASRLanguage", comment: "")))!
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
@@ -76,7 +78,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         let english:String
     }
     
-    let helpText = "还需要我教你怎么用吗？"
+    
     
     // 识别到的物体的字典
     let labelsList = [object(chinese: ["显示器","液晶屏"], english: "tvmonitor"),
@@ -167,7 +169,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         // sceneView.debugOptions = [.showFeaturePoints]
         
-        bufferSize = CGSize(width: sceneView.bounds.height, height: sceneView.bounds.width)
+        bufferSize = CGSize(width: view.bounds.height, height: view.bounds.width)
+        
+        //print(sceneView.bounds)
+        //print(view.bounds)
         print("😎把BufferSize设置成", bufferSize)
         
         //配置Layer初始化
@@ -262,8 +267,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         }
         
         // 开启引导
-        Speak("请缓慢移动手机，扫描周围环境")
-        textView.text = "请缓慢移动手机，扫描周围环境"
+        // Speak("请缓慢移动手机，扫描周围环境")
+        Speak(NSLocalizedString("ScanGuide", comment: ""))
+        textView.text = NSLocalizedString("ScanGuide", comment: "")
         
     }
     
@@ -337,7 +343,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         try audioEngine.start()
         
         // Let the user know to start talking.
-        textView.text = "你要找什么？"
+        textView.text = NSLocalizedString("WhatUWant", comment: "")
     }
     
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
@@ -380,7 +386,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             }
         } else {
             do {
-                Speak("你想找啥?")
+                // Speak("你想找啥?")
+                Speak(NSLocalizedString("WhatUWant", comment: ""))
                 
                 recordButton.backgroundColor = UIColor(red: 0.8, green: 0, blue: 0, alpha: 0.5)
 
@@ -403,7 +410,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         if exploreNodeState {
             exploreNodeState = false
-            Speak("很抱歉没有帮你找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，下次再来找我吧")
+            // Speak("很抱歉没有帮你找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，下次再来找我吧")
+            Speak("I'm sorry I didn't help you find the\(self.labelsList[self.exploreNodeIndex].english). Come to me next time")
         }else{
             trackingNodeState = false
             nodes[trackingNodeID].removeAllAudioPlayers()
@@ -430,8 +438,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
 //        } catch {
 //            // couldn't load file :(
 //        }
+        
         //Speak("更多功能，敬请期待")
-        Speak("更多功能，敬请期待")
+        Speak(NSLocalizedString("More", comment: ""))
     }
     
     // add form exsitingPlaneUsingExtent
@@ -507,8 +516,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             let distance = distanceBetween(sceneView.pointOfView!.position, nodes[trackingNodeID].position)
             
             if distance < distanceThreshold {
-                Speak("就在你手边啦")
-                textView.text = "就在你手边啦"
+                // Speak("就在你手边啦")
+                // textView.text = "就在你手边啦"
+                Speak(NSLocalizedString("Near", comment: ""))
+                
                 // 把音频速度调快
                 guard let player = nodes[trackingNodeID].audioPlayers.first,
                     let avNode = player.audioNode as? AVAudioMixing else {
@@ -697,15 +708,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     // MARK: - Fake NLU
     func objectIsWanted(from userCommand: String) -> Int {
         for label in labelsList {
-            for name in label.chinese {
-                if userCommand.contains(name){
-                    //print("想找的是", name,label.english, getClassIndex(label.english))
-                    return getClassIndex(label.english)
-                }
-            }
+//            for chineseName in label.chinese {
+//                if userCommand.contains(chineseName){
+//                    //print("想找的是", chineseName,label.english, getClassIndex(label.english))
+//                    return getClassIndex(label.english)
+//                }
+//            }
+            for chineseName in label.chinese {
+                  if userCommand.contains(chineseName){
+                      //print("想找的是", chineseName,label.english, getClassIndex(label.english))
+                      return getClassIndex(label.english)
+                  }
+              }
+            
+            if userCommand.contains(label.english){
+                      //print("想找的是", chineseName,label.english, getClassIndex(label.english))
+                      return getClassIndex(label.english)
+                  }
         }
-        // egg
         
+        // egg
         if userCommand.contains("主人"){
             Speak("妲己会永远爱主人，因为被设定成这样")
             return -1
@@ -717,13 +739,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         }
         
         
-        if userCommand.contains("帮助"){
-            Speak(helpText)
+        if userCommand.contains("帮助") {
+            Speak(NSLocalizedString("helpText", comment: ""))
             return -1
         }
         
         // 没有解析到关键词
-        Speak("对不起，我没听懂")
+        Speak(NSLocalizedString("failNLU", comment: ""))
         return -1
     }
     
@@ -735,7 +757,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
             // 播报距离
             let distance = distanceBetween(sceneView.pointOfView!.position, nodes[i].position)
             if distance > distanceThreshold {
-                Speak(String(format: labelsList[Index].chinese.first! + "在距离你%.1f 米处", distance))
+                // Speak(String(format: labelsList[Index].chinese.first! + "在距离你%.1f 米处", distance))
+                Speak(String(format: labelsList[Index].english + " is %.1f meter away from you", distance))
             }
             
             
@@ -779,7 +802,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         // 延迟执行播报提示
         DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
             if self.exploreNodeState == true {
-                self.Speak("当前视野未找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，请换个位置试试")
+                // self.Speak("当前视野未找到\(self.labelsList[self.exploreNodeIndex].chinese.first!)，请换个位置试试")
+                self.Speak("No\(self.labelsList[self.exploreNodeIndex].english) found in current view. Please try to adjust the direction.")
+                
                 self.exlopreFail()
             }
         }
@@ -793,7 +818,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
     // 进入探索模式
     func exploreFor(_ Index: Int){
-        Speak(String("当前视野未找到" + labelsList[Index].chinese.first! + ",请换个位置试试"))
+        // Speak(String("当前视野未找到" + labelsList[Index].chinese.first! + ",请换个位置试试"))
+        Speak(String("No" + labelsList[Index].english + "found in current view. Please try to adjust the direction."))
+        
         // 增加wait
         
     }
