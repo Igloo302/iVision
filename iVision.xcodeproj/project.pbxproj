@@ -13,6 +13,7 @@
 		0353365E2362083F00C0CD02 /* cup.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0353365D2362083E00C0CD02 /* cup.mp3 */; };
 		03533662236209E200C0CD02 /* mouse.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 03533661236209E200C0CD02 /* mouse.mp3 */; };
 		039DC1B5235C494600C5E7E7 /* fireplace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 039DC1B4235C494500C5E7E7 /* fireplace.mp3 */; };
+		03B5384F246273AA0045A8AB /* YOLOv3TinyFP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 03B5384E246273AA0045A8AB /* YOLOv3TinyFP16.mlmodel */; };
 		03C4F605235E00AF00862597 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C4F604235E00AF00862597 /* HelpViewController.swift */; };
 		8DEBA931235E9C3400780699 /* YOLOv3Tiny.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */; };
 		C4F9AC9423635A4800618808 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F9AC9323635A4800618808 /* OptionsViewController.swift */; };
@@ -32,6 +33,8 @@
 		03533661236209E200C0CD02 /* mouse.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = mouse.mp3; sourceTree = "<group>"; };
 		039DC1B4235C494500C5E7E7 /* fireplace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fireplace.mp3; sourceTree = "<group>"; };
 		03B5384D24626CEB0045A8AB /* iVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		03B5384E246273AA0045A8AB /* YOLOv3TinyFP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3TinyFP16.mlmodel; sourceTree = "<group>"; };
+		03B53851246275320045A8AB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		03C4F604235E00AF00862597 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		B972A080B9729F9000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		C2A2AB60C2A2AB2000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -97,6 +100,7 @@
 				03C4F604235E00AF00862597 /* HelpViewController.swift */,
 				FAD500A51ED668B60074D713 /* Assets.xcassets */,
 				FAD500A71ED668B60074D713 /* LaunchScreen.storyboard */,
+				03B5384E246273AA0045A8AB /* YOLOv3TinyFP16.mlmodel */,
 				032557F02349B902004A44C7 /* YOLOv3Tiny.mlmodel */,
 				FAD500AA1ED668B60074D713 /* Info.plist */,
 			);
@@ -183,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DEBA931235E9C3400780699 /* YOLOv3Tiny.mlmodel in Sources */,
+				03B5384F246273AA0045A8AB /* YOLOv3TinyFP16.mlmodel in Sources */,
 				FAD500A11ED668B60074D713 /* ViewController.swift in Sources */,
 				C4F9AC9423635A4800618808 /* OptionsViewController.swift in Sources */,
 				FAD5009F1ED668B60074D713 /* AppDelegate.swift in Sources */,
@@ -197,6 +202,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				FAD500A31ED668B60074D713 /* Base */,
+				03B53851246275320045A8AB /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

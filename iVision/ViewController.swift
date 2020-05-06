@@ -11,6 +11,7 @@ import Vision
 import Speech
 import SceneKit
 import ARKit
+import AudioToolbox.AudioServices
 
 
 
@@ -176,7 +177,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
         
         // 设置YOLO识别器
         // Vision classification request and model
-        guard let modelURL = Bundle.main.url(forResource: "YOLOv3Tiny", withExtension: "mlmodelc") else {fatalError("没有找到YOLOv3模型，凉凉")
+        guard let modelURL = Bundle.main.url(forResource: "YOLOv3TinyFP16", withExtension: "mlmodelc") else {fatalError("没有找到YOLOv3模型，凉凉")
         }
         do {
             // 载入模型
@@ -515,6 +516,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
                 }
                 avNode.rate = 2
                 
+                // 震动
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+                AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
+                
                 trackingNodeState = false
                 print("退出追踪状态")
             }
@@ -837,14 +842,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     
     
-    
+    // 创建文字
     private func createBubble(text: String) -> SCNText {
         let bubble = SCNText(string: text, extrusionDepth: CGFloat(bubbleDepth))
         var font = UIFont(name: "Futura", size: 0.15)
         font = font?.withTraits(traits: .traitBold)
         bubble.font = font
         bubble.alignmentMode = convertFromCATextLayerAlignmentMode(CATextLayerAlignmentMode.center)
-        bubble.firstMaterial?.diffuse.contents = UIColor.orange
+        bubble.firstMaterial?.diffuse.contents = UIColor.lightGray
         bubble.firstMaterial?.specular.contents = UIColor.white
         bubble.firstMaterial?.isDoubleSided = true
         // bubble.flatness // setting this too low can cause crashes.
@@ -854,7 +859,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, SF
     
     private func createSphereNode() -> SCNNode {
         let sphere = SCNSphere(radius: 0.005)
-        sphere.firstMaterial?.diffuse.contents = UIColor.cyan
+        sphere.firstMaterial?.diffuse.contents = UIColor.lightGray
         return SCNNode(geometry: sphere)
     }
     
